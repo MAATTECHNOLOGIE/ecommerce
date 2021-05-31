@@ -97,8 +97,7 @@
     </script>
     <script src="{{ asset('client/js/theme.min.js') }}">
     </script>
-    <script src="{{ asset('client/js/prism.min.js') }}">
-    </script>
+    <script src="{{ asset('client/js/prism.min.js') }}"></script>
     <script src="{{ asset('admin/assets/lib/select2/select2.min.js') }}"></script>
     <script src="{{ asset('admin/assets/js/sweetalert2.min.js')}}"></script>
 

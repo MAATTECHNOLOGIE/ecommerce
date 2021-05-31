@@ -166,6 +166,17 @@
   });
 
   
+  // Declechement des verifs lors du chargement de l'image
+    var monImage = $('#imageP');
+    // monImage.addEventListener('change', (event) => 
+    //   {
+    //     verifTaille(monImage,905,764);
+    //   });
+    monImage.change(function(event)
+    {
+      verifTaille(monImage,905,764);
+
+    })
   
 
 </script>
