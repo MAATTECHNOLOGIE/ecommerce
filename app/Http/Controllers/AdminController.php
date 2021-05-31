@@ -279,7 +279,6 @@ class AdminController extends Controller
 
             stock_prd::create($myStck);
 
-
       }
 
       //Supression de la session

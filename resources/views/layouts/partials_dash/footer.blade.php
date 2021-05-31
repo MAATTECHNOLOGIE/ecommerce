@@ -90,7 +90,7 @@
     <script src="admin/assets/js/theme.js"></script>
     <script src="admin/assets/js/sweetalert2.min.js"></script>
     <script src="admin/assets/lib/select2/select2.min.js"></script>
-    <script src="{{ asset('client/js/imgResize.js') }}"></script>
+    {{-- <script src="{{ asset('client/js/imgResize.js') }}"></script> --}}
     
     
 
