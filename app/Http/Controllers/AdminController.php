@@ -17,8 +17,12 @@ use App\Model\Image;
 use App\Model\Client;
 use App\Model\Commande;
 use App\Model\Produits_has_client;
+use App\Model\produits_has_attributs;
 use App\Model\Slide;
 use App\Model\setting;
+use App\Model\stock_prd;
+use App\Model\img_prd_by_color;
+
 use Schema;
 
 
@@ -206,19 +210,184 @@ class AdminController extends Controller
   //Ajout d'option au produit 
   public function optPrd()
   {
+    // unset($_SESSION['optPrd']);
     return view('pages.dash.Produit.optPrd');
   }
+  //Validation des options ajouter 
+  public function saveOpt()
+  {
+    $idPrd =  $_SESSION['savePrd'];
+    //Enregistrement des valeurs
+      //Parcourt de la session
+      foreach ($_SESSION['optPrd'] as  $ele) 
+      {
+       
+       //Enregistrement dans produits has attribut 
+         //Pour les tailees
+           if($ele['taille'] != '1')
+           {
 
-	public function pubProd()
-	{
-		$catgL = categorie::all()->sortByDesc('id');
-		$prod = DB::table('produits')
-                ->where('statut', '=', 1)
-                ->get();
-		return view('pages.dash.Produit.pubProd')
-			     ->with('prod',$prod)
-		       ->with('catgL',$catgL);
-	}
+              $dataProd_attrib = ['produits_id'=>$idPrd,
+                        'attributs_id'=>$ele['taille'],
+                       ];
+               produits_has_attributs::create($dataProd_attrib);
+           }
+         //Pour les pointure
+           if($ele['pointure'] != '1')
+           {
+                $dataProd_attrib = ['produits_id'=>$idPrd,
+                        'attributs_id'=>$ele['pointure'],
+                       ];
+                 produits_has_attributs::create($dataProd_attrib);
+           }
+         //Pour les epaisseurs
+           if($ele['epaisseur'] != '1')
+           {
+              $dataProd_attrib = ['produits_id'=>$idPrd,
+                        'attributs_id'=>$ele['epaisseur'],
+                       ];
+                 produits_has_attributs::create($dataProd_attrib);
+
+           }
+         //Pour les couleur
+           if($ele['color'] != '1')
+           {
+              $dataProd_attrib = ['produits_id'=>$idPrd,
+                        'attributs_id'=>$ele['color'],
+                       ];
+               produits_has_attributs::create($dataProd_attrib);
+           }
+
+         //Pour l'image
+           if($ele['imgPrdByColor'] != '')
+           {
+              $dataProd_attrib = ['lien'=>$ele['imgPrdByColor'],
+                                 'produits_id'=>$idPrd, 
+                                 'attributs_id'=> $ele['color'],];
+               img_prd_by_color::create($dataProd_attrib);
+           }
+
+       // Enregistrement dans la table stock
+          $myStck = ['taille'=>$ele['taille'],
+                     'couleur'=>$ele['color'],
+                     'pointure'=>$ele['pointure'],
+                     'epaisseur'=>$ele['epaisseur'],
+                     'qte'=>$ele['qte'],
+                     'prixPrd'=>$ele['prix'],
+                     'produits_id'=>$idPrd,
+                   ];
+
+            stock_prd::create($myStck);
+
+
+      }
+
+      //Supression de la session
+        unset($_SESSION['savePrd']);
+        unset($_SESSION['optPrd']);
+
+
+    return response()->json();
+  }
+
+  //Supression d'une option
+  public function delOpt(Request $request)
+  {
+    $nbr = $request->idEle;
+    unset($_SESSION['optPrd'][$nbr]);
+    return response()->json();
+  }
+
+
+  //Annulation de l'ajout option
+  public function delAllOpt()
+  {
+        unset($_SESSION['savePrd']);
+        unset($_SESSION['optPrd']);
+    return response()->json();
+  }
+
+
+  //Ajout d'option en session
+  public function addOpt(Request $request)
+  { 
+
+      $lien = env('LIEN_FILE');
+    // Verification si fichier soumis
+      if(!empty($request->file('imgPrdByColor')))
+          {
+              // Récupération du name file  
+                 $imgP = $request->file('imgPrdByColor');
+                // dossier de stockage
+                 $path = $imgP->store('imgPrdByColor','public');
+                // Chemin d'accès de l'image 
+                 $imageP = $lien.$path;
+          }
+        else
+          {
+            $imageP = getTProdId($_SESSION['savePrd'])->first()->img;
+          }
+
+            //Ajout en seesion des infos 
+              if (isset($_SESSION['optPrd'])) 
+                 {
+                    $item_array = array(
+                     'taille'      => $request->taille,
+                     'color'     => $request->color,
+                     'epaisseur'     => $request->epaisseur,
+                     'pointure'     => $request->pointure,
+                     'prix'     => $request->prix,
+                     'qte'     => $request->qte,
+                     'imgPrdByColor'=> $imageP,
+                     );
+
+                    $_SESSION["optPrd"][] = $item_array;
+                  }
+              else
+                {
+
+                  $item_array = array(
+                     'taille'      => $request->taille,
+                     'color'     => $request->color,
+                     'epaisseur'     => $request->epaisseur,
+                     'pointure'     => $request->pointure,
+                     'prix'     => $request->prix,
+                     'qte'     => $request->qte,
+                     'imgPrdByColor'=> $imageP,
+
+                   );
+
+                  //Création de session
+                   $_SESSION["optPrd"][] = $item_array;
+                }
+
+
+    return response()->json();
+  }
+
+
+  //Suprime un element en session
+    public function delSession(Request $request)
+    {
+      if(isset($_SESSION[$request->session])) 
+      {
+        unset($_SESSION[$request->session]);
+      }
+
+      return response()->json();
+
+    }
+  //Liste des produits publie
+	  public function pubProd()
+  	{
+  		$catgL = categorie::all()->sortByDesc('id');
+  		$prod = DB::table('produits')
+                  ->where('statut', '=', 1)
+                  ->orderBy('id','desc')->get();
+  		return view('pages.dash.Produit.pubProd')
+  			     ->with('prod',$prod)
+  		       ->with('catgL',$catgL);
+  	}
 
 	public function delProd(Request $request)
 	{

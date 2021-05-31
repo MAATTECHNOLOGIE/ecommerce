@@ -62,6 +62,7 @@
         copyright - {{getYear()}} <a class="text-light" href="#!" target="_blank" rel="noopener">{{getSite()}}</a>
       </div>-->
     </div>
+
   </div>
 </footer>
 <!-- Toolbar for handheld devices-->
@@ -106,7 +107,6 @@ src="{{ asset('client/js/jquery.min.js') }}"></script>
 </script>
 <script src="{{ asset('admin/assets/lib/select2/select2.min.js') }}"></script>
 <script src="{{ asset('admin/assets/js/sweetalert2.min.js')}}"></script>
-
 
 <!--Script de paiement cinetpay -->
 <script charset="utf-8" src="https://www.cinetpay.com/cdn/seamless_sdk/latest/cinetpay.prod.min.js" type="text/javascript"></script>

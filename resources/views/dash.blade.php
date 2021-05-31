@@ -38,6 +38,24 @@ Swal.fire({
 
   	$('#main_content').load("/optPrd");
   }
+  else
+  {
+              $.ajax({
+                url:'delSession',
+                method:'GET',
+                data:{session:'savePrd'},
+                dataType:'json',
+                success:function(data)
+                {
+                  $('#newProd').click();
+                },
+                error:function()
+                {
+                toastr.error('Erreur ');
+                }
+              });
+
+  }
 })
 })
 </script>
