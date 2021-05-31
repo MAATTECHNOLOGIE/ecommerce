@@ -25,4 +25,14 @@ if(!function_exists('getAttriById'))
 		return $attributs;
 	}
 }
+// Fonction du produit en fonction de l'attribut
+if(!function_exists('getProdAtrb'))
+{
+	function getProdAtrb($id)
+	{
+		$attributs = attributs::find($id);
+      	
+		return $attributs;
+	}
+}
 

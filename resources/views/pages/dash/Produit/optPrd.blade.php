@@ -19,13 +19,6 @@
   </div>
 
 </div>
-{{-- {{ dd($_SESSION['optPrd']) }} --}}
-{{--     "taille" => "28"
-    "color" => "2"
-    "epaisseur" => "Aucune"
-    "pointure" => "Aucune"
-    "prix" => "15200"
-    "qte" => "15" --}}
 
 
           <div class="row d-flex justify-content-center">
@@ -97,7 +90,7 @@
                   </div>
                   <hr class="border-200" />
                   <div class="form-group">
-                   <label for="prix">Prix</label>
+                   <label for="prix">Prix({{getTDevise()}})</label>
                    <input class="form-control" id="prix" type="number" min="1" placeholder="Prix produit" name="prix" required="required" value="{{ getTProdId($_SESSION['savePrd'])->first()->prix }}" >
                   </div>
                   {{-- <hr class="border-200" /> --}}
@@ -140,7 +133,7 @@
                               <h6 class="mb-1 font-weight-semi-bold"><a class="text-dark " href="#!">
                                 {{ getTProdId($_SESSION['savePrd'])->first()->nom }}
                               </a></h6>
-                              <p class="font-weight-semi-bold mb-0 text-500"> {{ $opt['prix'] }}</p>
+                              <p class="font-weight-semi-bold mb-0 text-500"> {{ $opt['prix'] }} {{getTDevise()}}</p>
                               <span class="badge badge rounded-capsule badge-soft-danger delOpt" id="{{ $loop->index }}"><span class="ml-1 fas fa-trash fs-1" data-fa-transform="shrink-2"></span>
                                   
                                 </span>
