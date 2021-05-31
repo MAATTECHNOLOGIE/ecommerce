@@ -70,6 +70,7 @@ class ClientController extends Controller
             ->where("produits.id",'=',$idprd)
             ->orderBy('produits.id','desc')
             ->get();
+     //dd($prod);
 
       $prodImg  = DB::table('produits')
             ->join('images', 'produits.id',
@@ -77,7 +78,7 @@ class ClientController extends Controller
             ->select('images.*','images.id as imagesID')
             ->where("images.produits_id",'=',$idprd)
             ->get();
-
+      //dd($prodImg);
 
 	  return view('pages.client.singleProduct')
 	  			->with('prodSingle',$prod)
@@ -827,6 +828,14 @@ class ClientController extends Controller
       ';
       return $output;
       
+   }
+
+   //TEST DE PARTAGE
+   public function viewPrd(Request $request)
+   { 
+     //dd($request->id);
+     $idPrd = $request->id;
+     return view('amopot')->with('idPrd',$idPrd);
    }
 
 
