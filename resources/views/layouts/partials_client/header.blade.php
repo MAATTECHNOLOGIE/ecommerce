@@ -4,7 +4,8 @@
 <html lang="en-US" dir="ltr">
 
 <head>
-
+    
+    <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=603d59d0f6067000116b02ef&product=inline-share-buttons" async="async"></script>
     <meta charset="utf-8">
 
     <title>{{getSite()}} |{{getabout()}}</title>
@@ -77,6 +78,7 @@
       })(window,document,'script','dataLayer','GTM-WKV3GT5');
 
     </script>
+
 
 </head>
 
@@ -271,12 +273,12 @@
                  @endforeach
 
 
-
+                <!--
                 <li class="nav-item about"><a class="nav-link" 
 
                   href="#payAnnc"><b>Notre histoire</b></a>
 
-                </li>  
+                </li> -->
 
                 <li class="nav-item contact"><a class="nav-link" 
 

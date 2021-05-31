@@ -38,9 +38,7 @@ Route::get('/cgu', 'ClientController@cgu')->name('cgu');
  Route::get('contact','ClientController@contact')->name('contact');
 
 // Page produit particulier
- Route::post('singleProdclient',
-     'ClientController@singleProdclient')
-     ->name('singleProdclient');
+ Route::post('singleProdclient','ClientController@singleProdclient')->name('singleProdclient');
 
 // Page panier
  Route::get('panier','ClientController@panier')
@@ -264,7 +262,8 @@ Route::get('/cgu', 'ClientController@cgu')->name('cgu');
  
 
 
-
+//TEST DE LIEN 
+Route::get('viewPrd', 'ClientController@viewPrd' );
 
  
  
