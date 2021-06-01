@@ -90,9 +90,23 @@ class AdminController extends Controller
   }
 
   //Return les valeur en fonctions des attributs
-  public function filtreVal(Request $request)
+  public function geToption(Request $request)
   {
-    // $taille = 
+
+    $taille = setDefault($request->taille,1);
+    $epaisseur =setDefault($request->epaisseur ,1);
+    $pointure =setDefault($request->pointure,1)  ;
+    $couleur =setDefault($request->couleur,1)  ;
+    $prdEle =stock_prd::where('taille','=',$taille)
+                ->orwhere('couleur','=',$couleur)
+                ->orwhere('pointure','=',$pointure)
+                ->orwhere('epaisseur','=',$epaisseur)
+                ->orwhere('produits_id','=',$request->myPrdId)
+                ->first();
+
+    dd($prdEle->qte);
+
+
   }
 
 	public function AddProd(Request $request)
@@ -330,6 +344,8 @@ class AdminController extends Controller
     unset($_SESSION['optPrd'][$nbr]);
     return response()->json();
   }
+
+  //
 
 
   //Annulation de l'ajout option

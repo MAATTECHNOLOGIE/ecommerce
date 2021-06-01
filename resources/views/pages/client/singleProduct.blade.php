@@ -123,6 +123,7 @@
                 </div>
 
                 <div class="position-relative mr-n4 mb-3">
+                  
                   @php
                      $coll = getProdAtrb($prodSg->produitsID);
                      $colEl =  $coll->where('type','couleur');
@@ -151,12 +152,14 @@
                 </div>
                 <form class="mb-grid-gutter" method="post" id="formAttri">
                   <!-- Taille -->
+                  <input type="hidden" value="{{ $prodSg->produitsID }}" id="myPrdId" name="myPrdId">
+                  <input type="hidden" name="couleur" id="colorChoix" value="1">
                   @if(!($tailleEl->isEmpty()))
                     <div class="form-group">
                       <div class="d-flex justify-content-between align-items-center pb-1">
                         <label class="font-weight-medium" for="product-size">Taille:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
                       </div>
-                      <select class="custom-select" required id="tailleListe" name="tailleListe" >
+                      <select class="custom-select" required id="tailleListe" name="taille" >
                         <option value="">choisir la taille</option>
                         @foreach ($tailleEl as $ele)
                         <option value="{{$ele->id}}">{{$ele->libelle}}</option>
@@ -170,7 +173,7 @@
                       <div class="d-flex justify-content-between align-items-center pb-1">
                         <label class="font-weight-medium" for="product-size">Pointure:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
                       </div>
-                      <select class="custom-select" required id="pointureListe" name="pointureListe" >
+                      <select class="custom-select" required id="pointureListe" name="pointure" >
                         <option value="">choisir la pointure</option>
                         @foreach ($pointureEl as $ele)
                         <option value="{{$ele->id}}">{{$ele->libelle}}</option>
@@ -184,7 +187,7 @@
                       <div class="d-flex justify-content-between align-items-center pb-1">
                         <label class="font-weight-medium" for="product-size">Epaisseur:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
                       </div>
-                      <select class="custom-select" required id="epaisseurListe" name="epaisseurListe" >
+                      <select class="custom-select" required id="epaisseurListe" name="epaisseur" >
                         <option value="">Choisir l'Epaisseur</option>
                         @foreach ($epaisseurEl as $ele)
                         <option value="{{$ele->id}}">{{$ele->libelle}}</option>
@@ -394,8 +397,7 @@
     {
       var idColor = $(this).attr('idColor');
       var idPrd = $(this).attr('idPrd');
-      console.log(idColor);
-      console.log(idPrd);
+      $('#colorChoix').val(idColor);
       $.ajax({
         url:'choixColor',
         method:'GET',
@@ -422,20 +424,15 @@
     $('#tailleListe').change(function()
     {
       var idColor = $('.choixColor').attr('idColor');
-      var idPrd = $('#myPrdId').val();
+
+      var idPrd = $('#myPrdId').val();+
       $.ajax({
         url:'geToption',
         method:'GET',
         data:$('#formAttri').serialize(),
         dataType:'json',
         success:function(data){
-          var imgPrd=$('#imgPrd');
-          var msgStock = $('#msgStock');
-          imgPrd.attr('src',data.lien);
-          imgPrd.attr('data-zoom',data.lien);
-          msgStock.html(data.stock);
-
-
+          console.log(data);
         },
         error:function(data){
            console.log("data");

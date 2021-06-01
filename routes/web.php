@@ -124,6 +124,10 @@ Route::get('/cgu', 'ClientController@cgu')->name('cgu');
  //Ajout d'option a un prouit
   Route::get('optPrd', 'AdminController@optPrd')->name('optPrd');
   Route::post('addOpt', 'AdminController@addOpt')->name('addOpt');
+
+//Filtre d'option 
+  Route::get('geToption','AdminController@geToption')->name('geToption');
+
   //Supression option
   Route::get('delOpt', 'AdminController@delOpt')->name('delOpt'); 
   Route::get('delAllOpt', 'AdminController@delAllOpt')->name('delAllOpt'); 
