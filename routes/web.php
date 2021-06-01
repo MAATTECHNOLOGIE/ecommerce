@@ -129,6 +129,11 @@ Route::get('/cgu', 'ClientController@cgu')->name('cgu');
   Route::get('delAllOpt', 'AdminController@delAllOpt')->name('delAllOpt'); 
   Route::get('delSession','AdminController@delSession')->name('delSession');
 
+  //Choix d'image par couleur
+  Route::get('choixColor', 'AdminController@choixColor')->name('choixColor'); 
+
+  
+
   //Enregistrement 
   Route::get('saveOpt', 'AdminController@saveOpt')->name('saveOpt');
 

@@ -2,6 +2,7 @@
     <div class="page-title-overlap bg-dark pt-4">
       
       @foreach ($prodSingle as $prodSg)
+
       <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
         <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
           <nav aria-label="breadcrumb">
@@ -36,7 +37,7 @@
                      <div 
                        class="cz-preview-item active" 
                        id="first">
-                       <img class="cz-image-zoom" src="{{$prd->img}}"
+                       <img class="cz-image-zoom" id="imgPrd" src="{{$prd->img}}"
                             alt="Product image" 
                             data-zoom="{{$prd->img}}">
                           <div class="cz-image-zoom-pane"></div>
@@ -122,72 +123,78 @@
                 </div>
 
                 <div class="position-relative mr-n4 mb-3">
+                  @php
+                     $coll = getProdAtrb($prodSg->produitsID);
+                     $colEl =  $coll->where('type','couleur');
+                     $epaisseurEl =  $coll->where('type','epaisseur');
+                     $pointureEl =  $coll->where('type','pointure');
+                     $tailleEl =  $coll->where('type','taille');
+                  @endphp
+                  
+                  @if(!($colEl->isEmpty()))
+                  @foreach ($colEl as $ele)
                   <div class="custom-control custom-option custom-control-inline mb-2">
-                    <input class="custom-control-input" type="radio" name="color" id="color1"
-                           data-label="colorOption" value="Rouge" checked>
-                        <label class="custom-option-label rounded-circle" for="color1">
+                    <input class="custom-control-input choixColor" type="radio" name="color" 
+                    idColor="{{$ele->id}}" id="{{'color'.$ele->id}}"
+                           data-label="colorOption" value="{{$ele->libelle}}" idPrd={{$prodSg->produitsID}}>
+                        <label class="custom-option-label rounded-circle" for="{{'color'.$ele->id}}">
                           <span class="custom-option-color rounded-circle" 
-                              style="background-color: red;">
+                              style="background-color: {{$ele->code}};">
                           </span>
                         </label>
                   </div>
+                      
+                  @endforeach
+                  @endif
 
-                  <div class="custom-control custom-option custom-control-inline mb-2">
-                    <input class="custom-control-input" type="radio" name="color" id="color2"
-                           data-label="colorOption" value="jaune" checked>
-                        <label class="custom-option-label rounded-circle" for="color2">
-                          <span class="custom-option-color rounded-circle" 
-                              style="background-color: yellow;">
-                          </span>
-                        </label>
-                  </div>
+                  
                 </div>
-                <form class="mb-grid-gutter" method="post">
+                <form class="mb-grid-gutter" method="post" id="formAttri">
                   <!-- Taille -->
-                  <div class="form-group">
-                    <div class="d-flex justify-content-between align-items-center pb-1">
-                      <label class="font-weight-medium" for="product-size">Taille:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
+                  @if(!($tailleEl->isEmpty()))
+                    <div class="form-group">
+                      <div class="d-flex justify-content-between align-items-center pb-1">
+                        <label class="font-weight-medium" for="product-size">Taille:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
+                      </div>
+                      <select class="custom-select" required id="tailleListe" name="tailleListe" >
+                        <option value="">choisir la taille</option>
+                        @foreach ($tailleEl as $ele)
+                        <option value="{{$ele->id}}">{{$ele->libelle}}</option>
+                        @endforeach
+                      </select>
                     </div>
-                    <select class="custom-select" required id="product-size">
-                      <option value="">choisir la taille</option>
-                      <option value="xs">XS</option>
-                      <option value="s">S</option>
-                      <option value="m">M</option>
-                      <option value="l">L</option>
-                      <option value="xl">XL</option>
-                    </select>
-                  </div>
+                  @endif
                   <!-- Pointure -->
-                  <div class="form-group">
-                    <div class="d-flex justify-content-between align-items-center pb-1">
-                      <label class="font-weight-medium" for="product-size">Pointure:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
+                  @if(!($pointureEl->isEmpty()))
+                    <div class="form-group">
+                      <div class="d-flex justify-content-between align-items-center pb-1">
+                        <label class="font-weight-medium" for="product-size">Pointure:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
+                      </div>
+                      <select class="custom-select" required id="pointureListe" name="pointureListe" >
+                        <option value="">choisir la pointure</option>
+                        @foreach ($pointureEl as $ele)
+                        <option value="{{$ele->id}}">{{$ele->libelle}}</option>
+                        @endforeach
+                      </select>
                     </div>
-                    <select class="custom-select" required id="product-size">
-                      <option value="">choisir la pointure</option>
-                      <option value="xs">XS</option>
-                      <option value="s">S</option>
-                      <option value="m">M</option>
-                      <option value="l">L</option>
-                      <option value="xl">XL</option>
-                    </select>
-                  </div>
+                  @endif
                   <!-- Epaisseur -->
-                  <div class="form-group">
-                    <div class="d-flex justify-content-between align-items-center pb-1">
-                      <label class="font-weight-medium" for="product-size">Epaisseur:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
+                  @if(!($epaisseurEl->isEmpty()))
+                    <div class="form-group">
+                      <div class="d-flex justify-content-between align-items-center pb-1">
+                        <label class="font-weight-medium" for="product-size">Epaisseur:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
+                      </div>
+                      <select class="custom-select" required id="epaisseurListe" name="epaisseurListe" >
+                        <option value="">Choisir l'Epaisseur</option>
+                        @foreach ($epaisseurEl as $ele)
+                        <option value="{{$ele->id}}">{{$ele->libelle}}</option>
+                        @endforeach
+                      </select>
                     </div>
-                    <select class="custom-select" required id="product-size">
-                      <option value="">Choisir l'Epaisseur</option>
-                      <option value="xs">XS</option>
-                      <option value="s">S</option>
-                      <option value="m">M</option>
-                      <option value="l">L</option>
-                      <option value="xl">XL</option>
-                    </select>
-                  </div>
+                  @endif
                   <!-- Alert -->
                   <div class="form-group">
-                    <div class="d-flex justify-content-between align-items-center pb-1">
+                    <div class="d-flex justify-content-between align-items-center pb-1" id="msgStock">
                      <!-- Primary alert -->
                      
                       @foreach ($prodSingle as $prodSg)
@@ -379,4 +386,64 @@
       });
   });
 
+</script>
+<script type='text/javascript'>
+  $(function()
+  {
+    $('.choixColor').click(function()
+    {
+      var idColor = $(this).attr('idColor');
+      var idPrd = $(this).attr('idPrd');
+      console.log(idColor);
+      console.log(idPrd);
+      $.ajax({
+        url:'choixColor',
+        method:'GET',
+        data:{idColor:idColor,idPrd:idPrd},
+        dataType:'json',
+        success:function(data){
+          var imgPrd=$('#imgPrd');
+          var msgStock = $('#msgStock');
+          imgPrd.attr('src',data.lien);
+          imgPrd.attr('data-zoom',data.lien);
+          msgStock.html(data.stock);
+
+
+        },
+        error:function(data){
+           console.log("data");
+        }
+      });
+
+    })
+
+
+    //Evenement choix taille
+    $('#tailleListe').change(function()
+    {
+      var idColor = $('.choixColor').attr('idColor');
+      var idPrd = $('#myPrdId').val();
+      $.ajax({
+        url:'geToption',
+        method:'GET',
+        data:$('#formAttri').serialize(),
+        dataType:'json',
+        success:function(data){
+          var imgPrd=$('#imgPrd');
+          var msgStock = $('#msgStock');
+          imgPrd.attr('src',data.lien);
+          imgPrd.attr('data-zoom',data.lien);
+          msgStock.html(data.stock);
+
+
+        },
+        error:function(data){
+           console.log("data");
+        }
+      });
+
+    })
+    //Evenement choix epaizseur
+    //Evenement choix pointure
+  })
 </script>
