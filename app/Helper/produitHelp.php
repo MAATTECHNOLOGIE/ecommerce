@@ -39,3 +39,45 @@ if(!function_exists('getProdAtrb'))
 	}
 }
 
+// Qte en fonction de la taille
+if(!function_exists('getQtebyTaille'))
+{
+	function getQtebyTaille($idprd,$idcolor,$taille)
+	{
+		$qteStock = DB::table('stock_prds')
+			->where('stock_prds.produits_id','=', $idprd)
+			->where('stock_prds.couleur','=', $idcolor)
+			->where('stock_prds.taille','=', $taille)
+			->select('stock_prds.qte')
+            ->get();
+         return $qteStock;
+	}
+}
+// Qte en fonction de l'Epaisseur
+if(!function_exists('getQtebyEpaisseur'))
+{
+	function getQtebyEpaisseur($idprd,$idcolor,$epaisseur)
+	{
+		$qteStock = DB::table('stock_prds')
+			->where('stock_prds.produits_id','=', $idprd)
+			->where('stock_prds.couleur','=', $idcolor)
+			->where('stock_prds.epaisseur','=', $epaisseur)
+			->select('stock_prds.qte')
+            ->get();
+         return $qteStock;
+	}
+}
+// Qte en fonction de la pointure
+if(!function_exists('getQtebyPointure'))
+{
+	function getQtebyPointure($idprd,$idcolor,$pointure)
+	{
+		$qteStock = DB::table('stock_prds')
+			->where('stock_prds.produits_id','=', $idprd)
+			->where('stock_prds.couleur','=', $idcolor)
+			->where('stock_prds.pointure','=', $pointure)
+			->select('stock_prds.qte')
+            ->get();
+         return $qteStock;
+	}
+}

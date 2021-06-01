@@ -92,19 +92,31 @@ class AdminController extends Controller
   //Return les valeur en fonctions des attributs
   public function geToption(Request $request)
   {
+    // Réception des données
+      $valeur   = $request->valeur;
+      $attribut = $request->attribut;
+      $idprod   = $request->idprod;
+      $idColor  = $request->idColor;
+    // Qte en fonction de la taille
+     if ($attribut=='taille') 
+     {
+       $stock = getQtebyTaille($idprod,$idColor,$valeur)->sum('qte');
+       return response()->json(['qtePd'=>$stock]);       
+     }
+    // Qte en fonction de la pointure
+      if ($attribut=='pointure') 
+      {
+       $stock = getQtebyPointure($idprod,$idColor,$valeur)->sum('qte');
+       return response()->json(['qtePd'=>$stock]);       
+      }
 
-    $taille = setDefault($request->taille,1);
-    $epaisseur =setDefault($request->epaisseur ,1);
-    $pointure =setDefault($request->pointure,1)  ;
-    $couleur =setDefault($request->couleur,1)  ;
-    $prdEle =stock_prd::where('taille','=',$taille)
-                ->orwhere('couleur','=',$couleur)
-                ->orwhere('pointure','=',$pointure)
-                ->orwhere('epaisseur','=',$epaisseur)
-                ->orwhere('produits_id','=',$request->myPrdId)
-                ->first();
-
-    dd($prdEle->qte);
+    // Qte en fonction l'épaisseur
+      if ($attribut=='epaisseur') 
+      {
+       $stock = getQtebyEpaisseur($idprod,$idColor,$valeur)->sum('qte');
+       return response()->json(['qtePd'=>$stock]);       
+      }
+ 
 
 
   }
