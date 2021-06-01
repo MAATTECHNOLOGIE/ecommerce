@@ -126,10 +126,12 @@
                   
                   @php
                      $coll = getProdAtrb($prodSg->produitsID);
-                     $colEl =  $coll->where('type','couleur');
-                     $epaisseurEl =  $coll->where('type','epaisseur');
-                     $pointureEl =  $coll->where('type','pointure');
-                     $tailleEl =  $coll->where('type','taille');
+                     $colEl =  $coll->where('type','couleur')->unique();
+                     $epaisseurEl =  $coll->where('type','epaisseur')->unique();
+                     $pointureEl =  $coll->where('type','pointure')->unique();
+                     $tailleEl =  $coll->where('type','taille')->unique();
+
+                     // dd($colEl);
                   @endphp
                   
                   @if(!($colEl->isEmpty()))
@@ -138,7 +140,7 @@
                     <input class="custom-control-input choixColor" type="radio" name="color" 
                     idColor="{{$ele->id}}" id="{{'color'.$ele->id}}"
                            data-label="colorOption" value="{{$ele->libelle}}" idPrd={{$prodSg->produitsID}}>
-                        <label class="custom-option-label rounded-circle" for="{{'color'.$ele->id}}">
+                        <label class="custom-option-label rounded-circle border border-dark" for="{{'color'.$ele->id}}">
                           <span class="custom-option-color rounded-circle" 
                               style="background-color: {{$ele->code}};">
                           </span>
