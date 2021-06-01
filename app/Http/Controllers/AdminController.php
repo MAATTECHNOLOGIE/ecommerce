@@ -61,6 +61,40 @@ class AdminController extends Controller
            ->with('scatgL',$scatgL);
 	}
 
+  //Recuperation d'image selon couleur
+  public function choixColor(Request $request)
+  {
+    $idColor = $request->idColor;
+    $idPrd = $request->idPrd;
+    $img = img_prd_by_color::where('produits_id',$idPrd)->where('attributs_id',$idColor)->first();
+    //Selection de qte dans stock
+      $prdStock = stock_prd::where('produits_id','=',$idPrd)->where('couleur','=',$idColor)->get();
+      $qte = $prdStock->sum('qte');
+      $output = '';
+                      
+                       if ($qte==0)
+                        {
+                          $output .= '<div class="alert alert-warning" role="alert">
+                                                   <b>STOCK<span class="alert-link"> : rupture</a></b>
+                                                  </div>';
+                        }
+                        else
+                        {
+                          $output .= '<div class="alert alert-success" role="alert">
+                         <b>STOCK<span class="alert-link"> : '.$qte.'</a></b> 
+                        </div>';
+                        }
+                       
+          return response()->json(['lien'=>$img->lien,'stock'=>$output]);
+
+  }
+
+  //Return les valeur en fonctions des attributs
+  public function filtreVal(Request $request)
+  {
+    // $taille = 
+  }
+
 	public function AddProd(Request $request)
 	{
     $idsctg = $request->scatg;

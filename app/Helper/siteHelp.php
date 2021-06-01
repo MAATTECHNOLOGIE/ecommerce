@@ -15,6 +15,24 @@ if(!function_exists('getTProd'))
 	}
 }
 
+
+//Donne la valeur $default a une variable  si elle est  vide
+if(!function_exists('setDefault'))
+{
+	function setDefault($variable,$default)
+	{
+		
+		if(empty($variable))
+		{
+			return $default;
+		}
+		else
+		{
+			return $variable;
+		}
+	}
+}
+
 if(!function_exists('getNbProd'))
 {
 	function getNbProd()

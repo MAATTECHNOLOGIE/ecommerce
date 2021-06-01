@@ -28,11 +28,14 @@ if(!function_exists('getAttriById'))
 // Fonction du produit en fonction de l'attribut
 if(!function_exists('getProdAtrb'))
 {
-	function getProdAtrb($id)
+	function getProdAtrb($idPrd)
 	{
-		$attributs = attributs::find($id);
-      	
-		return $attributs;
+		$prodAttribut = DB::table('produits_has_attributs')
+            ->join('attributs', 'produits_has_attributs.attributs_id', '=', 'attributs.id')
+            ->select('attributs.*')
+			->where('produits_has_attributs.produits_id','=', $idPrd)
+            ->get();
+         return $prodAttribut;
 	}
 }
 
