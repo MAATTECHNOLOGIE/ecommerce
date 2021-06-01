@@ -220,31 +220,17 @@
                   </div>
 
                   <div class="form-group d-flex align-items-center">
-                    <select class="custom-select mr-3" style="width: 5rem;">
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                      <option value="6">6</option>
-                      <option value="7">7</option>
-                      <option value="8">8</option>
-                      <option value="9">9</option>
-                      <option value="10">10</option>
-                      <option value="11">11</option>
-                      <option value="12">13</option>
-                      <option value="12">14</option>
-                      <option value="12">15</option>
-                      <option value="12">16</option>
-                      <option value="12">17</option>
-                      <option value="12">18</option>
-                      <option value="12">19</option>
-                      <option value="12">20</option>
-                    </select>
-
-                    <button class="btn btn-primary btn-shadow btn-block" type="submit">
+ 
+                  <div class="form-group col-4">
+                    {{-- <label for="number-input">Quantité</label> --}}
+                    <input class="form-control" type="number" id="qteAchat" value="01">
+                  </div>
+                  <div class="form-group">
+                    <button class="btn btn-primary btn-shadow btn-block"  id="buy">
                       <i class="czi-cart font-size-lg mr-2"></i>Ajouter au panier
                     </button>
+                  </div>
+
                   </div>
                 </form>
                 <!-- Product panels-->
@@ -343,18 +329,42 @@
   });
 
  // Ajouter de produit au panier
-    $(".buy").click(function(){
-     var idProd = $(this).attr("id");
-     var nbQt = $(".nbqte").children(
-                "option:selected").val();
+    $("#buy").click(function(event){
+          event.preventDefault();
+      var idProd = $('#myPrdId').val();
+      var nbQt = $("#qteAchat").val();
+
+      //Pour epaisseur
+      @if(!($epaisseurEl->isEmpty()))
+        var epaisseur = $('#epaisseurListe').val();
+      @else
+        var epaisseur = 1;
+      @endif
+
+      //Pour taille
+      @if(!($tailleEl->isEmpty()))
+        var taille = $('#tailleListe').val();
+      @else
+        var taille = 1;
+      @endif
+
+      //Pour pointure
+      @if(!($pointureEl->isEmpty()))
+        var pointure = $('#pointureListe').val();
+      @else
+        var pointure = 1;
+      @endif
+
+
      $.ajax({
        url:'AddCart',
        method:'get',
-       data:{idProd:idProd,nbQt:nbQt},
+       data:{idProd:idProd,nbQt:nbQt,taille:taille,pointure:pointure,epaisseur:epaisseur},
        dataType:'json',
        success:function(data){
          $(".nbCart").text(data.count);
          $("#valPanier").text(data.montant);
+         sw
          console.log(data);
        },
        error:function(data){
@@ -364,6 +374,8 @@
 
 
     })
+
+
  // Single product
     $('.singleIndProd').click(function(){
       var idProd = $(this).attr("id");
@@ -426,6 +438,7 @@
     $('#tailleListe').change(function()
     {
       var idColor = $('.choixColor').attr('idColor');
+<<<<<<< HEAD
       var idPrd   = $('#myPrdId').val();
       var valeur  = $( "#tailleListe option:selected" ).val();
       var attribut = "taille";
@@ -453,6 +466,9 @@
       var valeur   = $("#epaisseurListe option:selected" ).val();
       var attribut = "epaisseur";
       console.log("color:"+idColor+" valeur: "+valeur+" idPrd: "+idPrd);
+=======
+      var idPrd = $('#myPrdId').val();
+>>>>>>> refs/remotes/origin/main
       $.ajax({
         url:'geToption',
         method:'GET',
@@ -470,6 +486,7 @@
     })
     
     //Evenement choix pointure
+<<<<<<< HEAD
     $('#pointureListe').change(function()
     {
       var idColor  = $('.choixColor').attr('idColor');
@@ -492,5 +509,9 @@
       });
 
     })
+=======
+
+
+>>>>>>> refs/remotes/origin/main
   })
 </script>

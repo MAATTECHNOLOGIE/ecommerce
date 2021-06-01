@@ -155,8 +155,20 @@ class ClientController extends Controller
 
 	public function AddCart(Request $request)
 	{
-	  $idProd = $request->idProd;
-    $nbQt   = $request->nbQt;
+    //recup les variables
+  	  $idProd = $request->idProd;
+      $nbQt   = $request->nbQt;
+    //   $taille = $request->taille;
+    //   $pointure = $request->pointure;
+    //   $epaisseur = $request->epaisseur;
+
+    // //Recup le produit dans le stock
+    //   $prdEle =stock_prd::where('taille','=',$taille)
+    //               ->where('couleur','=',$couleur)
+    //               ->where('pointure','=',$pointure)
+    //               ->where('epaisseur','=',$epaisseur)
+    //               ->where('produits_id','=',$idProd)
+    //               ->first();
      
       if (isset($_SESSION['panier']))
       {
