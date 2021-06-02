@@ -118,10 +118,8 @@
                  <div class="mb-3"><span class="h3 font-weight-normal text-primary mr-1">{{$prodSg->prix}} {{getTDevise()}}</span>
                  </div>
                 @endforeach
-                <div class="font-size-sm mb-4"><span class="text-heading font-weight-medium mr-1">Color:</span>
+                <div class="font-size-sm mb-4"><span class="text-heading font-weight-medium mr-1">Couleur:</span>
                  <span class="text-muted" id="colorOption"></span>
-                </div>
-
                 <div class="position-relative mr-n4 mb-3">
                   
                   @php
@@ -209,7 +207,7 @@
                           </div>
                        @else
                         <div class="alert alert-success" role="alert">
-                         <b>STOCK<span class="alert-link"> : {{$prodSg->quantite}}</a></b> 
+                         <b>STOCK<span class="alert-link"> : <span class="qte"> {{$prodSg->quantite}}</span></a></b> 
                         </div>
                        @endif
                        
@@ -442,14 +440,18 @@
     $('#tailleListe').change(function()
     {
       var idColor = $('.choixColor').attr('idColor');
-      var idPrd = $('#myPrdId').val();
+      var idPrd   = $('#myPrdId').val();
+      var valeur  = $( "#tailleListe option:selected" ).val();
+      var attribut = "taille";
+      console.log("color:"+idColor+" valeur: "+valeur+" idPrd: "+idPrd);
       $.ajax({
         url:'geToption',
         method:'GET',
-        data:$('#formAttri').serialize(),
+        data:{idprod:idPrd,idColor:idColor,valeur:valeur,attribut:attribut},
         dataType:'json',
         success:function(data){
-          console.log(data);
+          console.log(data.qtePd);
+          $(".qte").text(data.qtePd);
         },
         error:function(data){
            console.log("data");
@@ -457,8 +459,54 @@
       });
 
     })
-    //Evenement choix epaizseur
+    //Evenement choix epaisseur
+    $('#epaisseurListe').change(function()
+    {
+      var idColor  = $('.choixColor').attr('idColor');
+      var idPrd    = $('#myPrdId').val();
+      var valeur   = $("#epaisseurListe option:selected" ).val();
+      var attribut = "epaisseur";
+      console.log("color:"+idColor+" valeur: "+valeur+" idPrd: "+idPrd);
+      var idPrd = $('#myPrdId').val();
+      $.ajax({
+        url:'geToption',
+        method:'GET',
+        data:{idprod:idPrd,idColor:idColor,valeur:valeur,attribut:attribut},
+        dataType:'json',
+        success:function(data){
+          console.log(data.qtePd);
+          $(".qte").text(data.qtePd);
+        },
+        error:function(data){
+           console.log("data");
+        }
+      });
+
+    })
+    
     //Evenement choix pointure
+    $('#pointureListe').change(function()
+    {
+      var idColor  = $('.choixColor').attr('idColor');
+      var idPrd    = $('#myPrdId').val();
+      var valeur   = $("#pointureListe option:selected" ).val();
+      var attribut = "pointure";
+      console.log("color:"+idColor+" Valeur: "+valeur+" idPrd: "+idPrd);
+      $.ajax({
+        url:'geToption',
+        method:'GET',
+        data:{idprod:idPrd,idColor:idColor,valeur:valeur,attribut:attribut},
+        dataType:'json',
+        success:function(data){
+          console.log(data.qtePd);
+          $(".qte").text(data.qtePd);
+        },
+        error:function(data){
+           console.log("data");
+        }
+      });
+
+    })
 
 
   })
