@@ -22,7 +22,7 @@
 
     <meta name="keywords" content="bussiness, diaspora africaine, entrepreneur africain , vêtement africain, produit africain, Aliment africain,Coiffure africaine, Décoration, Culture , Beauté africaine, cuisine, transport, service, Mode, Habillement, creativité afriaine, plateforme digitale">
 
-    <meta name="author" content="Olimargo">
+    <meta name="author" content="ecommerce">
 
     <!-- Viewport-->
 
@@ -31,13 +31,13 @@
     <!-- Favicon and Touch Icons-->
 
     <link rel="apple-touch-icon" sizes="180x180" 
-    href="client/img/olimargo/icon.png">
+    href="client/img/ecommerce/icon.png">
 
     <link rel="icon" type="image/png" sizes="32x32" 
-    href="client/img/olimargo/icon.png">
+    href="client/img/ecommerce/icon.png">
 
     <link rel="icon" type="image/png" sizes="16x16" 
-    href="client/img/olimargo/icon.png">
+    href="client/img/ecommerce/icon.png">
 
     <link rel="mask-icon" color="#fe6a6a" href="safari-pinned-tab.svg">
 

@@ -106,7 +106,13 @@ src="{{ asset('client/js/jquery.min.js') }}"></script>
 <!--Script de paiement cinetpay -->
 <script charset="utf-8" src="https://www.cinetpay.com/cdn/seamless_sdk/latest/cinetpay.prod.min.js" type="text/javascript"></script>
 
- 
+<!--Script de personnalisation du template -->
+<script type="text/javascript">
+   $(function(){
+      
+   });
+</script>
+
 <!-- Apps JS -->
 <script type="text/javascript"
  src="{{ asset('client/js/client.js') }}">
@@ -179,9 +185,10 @@ src="{{ asset('client/js/jquery.min.js') }}"></script>
 </script>
 
 
-
-
 <script type="text/javascript">
+  // Changer l'écriture
+  
+
 $("#recherche").select2({
 ajax: {
 // url: "https://api.github.com/search/repositories",
@@ -224,6 +231,8 @@ var $container = $(
                   '<li class="media mb-1 singleIndProd" id="'+repo.id+'"><img src="'+repo.image+'" class="rounded mr-3" width="64" alt="Media"><div class="media-body"><h6 class="mb-1">'+repo.libelle+'<strong> ('+repo.prixPrdFormat+')</strong></h6><span class="font-size-sm text-muted"><span> Catégorie : '+repo.categorie+'</span></span></div><a href="#panierSg"><button class="btn btn-primary  mr-3 mb-1" ><i class="czi-eye font-size-lg mr-2"></i>Voir</button></a></li>'
 );
 
+
+$(".select2-results__message").text("Cool");
 return $container;
 }
 
@@ -256,6 +265,10 @@ var token = $('input[name=_token]').val();
 })
 </script>
 @endif
+
+<script type="text/javascript">
+
+</script>
 
 <style type="text/css">
 .menuL : hover{

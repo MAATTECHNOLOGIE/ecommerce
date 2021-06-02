@@ -120,8 +120,6 @@
                 @endforeach
                 <div class="font-size-sm mb-4"><span class="text-heading font-weight-medium mr-1">Couleur:</span>
                  <span class="text-muted" id="colorOption"></span>
-                <
-
                 <div class="position-relative mr-n4 mb-3">
                   
                   @php
@@ -438,7 +436,6 @@
     $('#tailleListe').change(function()
     {
       var idColor = $('.choixColor').attr('idColor');
-<<<<<<< HEAD
       var idPrd   = $('#myPrdId').val();
       var valeur  = $( "#tailleListe option:selected" ).val();
       var attribut = "taille";
@@ -466,9 +463,7 @@
       var valeur   = $("#epaisseurListe option:selected" ).val();
       var attribut = "epaisseur";
       console.log("color:"+idColor+" valeur: "+valeur+" idPrd: "+idPrd);
-=======
       var idPrd = $('#myPrdId').val();
->>>>>>> refs/remotes/origin/main
       $.ajax({
         url:'geToption',
         method:'GET',
@@ -486,7 +481,6 @@
     })
     
     //Evenement choix pointure
-<<<<<<< HEAD
     $('#pointureListe').change(function()
     {
       var idColor  = $('.choixColor').attr('idColor');
@@ -509,9 +503,7 @@
       });
 
     })
-=======
 
 
->>>>>>> refs/remotes/origin/main
   })
 </script>

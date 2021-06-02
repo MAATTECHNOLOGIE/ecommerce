@@ -275,7 +275,7 @@
 
             <a class="btn btn-primary mt-3 buybefore" href="#payCmnd">
               <i class="czi-euro-circle"></i>&nbsp;
-              Payer avant la livraison
+              Payer maintenant
             </a>
 
               <button id="bt_get_signature" style="display: none;"></button>
