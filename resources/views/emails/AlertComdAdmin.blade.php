@@ -7,6 +7,8 @@ Numéro Tel  : <strong>{{ $cltTel }}</strong> <br>
 Numéro Commande  : <strong>{{ $numCmd }}</strong> <br>
 Montant  : <strong>{{ $montant.' '.getTDevise() }}</strong> <br>
 Date  : <strong>{{ date("d-m-Y H:i:s") }}</strong> <br>
+Lieu de Livraison : {{  $paysLiv}} - {{ $vilLiv}} <br>
+Coût de livraison : {{ $coutLiv }} <br>
 
 Merci,<br>
 {{ config('app.name') }}

@@ -327,10 +327,14 @@ class ClientController extends Controller
     $cltNom= $_SESSION['clients']["nom"];
     $cltTel= $_SESSION['clients']["numero_telephone"];
     $montant = $total+$_SESSION["liv"]['livcout'];
+    $paysLiv= $livr->pays;
+    $vilLiv= $livr->ville;
+    $coutLiv=$_SESSION["liv"]['livcout'];
 
 
-     Mail::to($to)->send(new AlertComdAdmin($subject,$cltNom,$cltTel,$montant,$numCmd));
-     Mail::to($cltMail)->send(new AlertComdClt($subject,$montant,$numCmd));
+
+     Mail::to($to)->send(new AlertComdAdmin($subject,$cltNom,$cltTel,$montant,$numCmd,$paysLiv,$vilLiv,$coutLiv));
+     Mail::to($cltMail)->send(new AlertComdClt($subject,$montant,$numCmd,$paysLiv,$vilLiv,$coutLiv));
 
     // mail($to,$subject,$message, $headers);
     $cmPrd = commande::create($cmdD);

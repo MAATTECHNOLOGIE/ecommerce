@@ -101,6 +101,7 @@ src="{{ asset('client/js/jquery.min.js') }}"></script>
 <script src="{{ asset('client/js/prism.min.js') }}">
 </script>
 <script src="{{ asset('admin/assets/lib/select2/select2.min.js') }}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/i18n/fr.js"></script>
 <script src="{{ asset('admin/assets/js/sweetalert2.min.js')}}"></script>
 
 <!--Script de paiement cinetpay -->
@@ -183,6 +184,7 @@ src="{{ asset('client/js/jquery.min.js') }}"></script>
 
 <script type="text/javascript">
 $("#recherche").select2({
+  language: "fr",
 ajax: {
 // url: "https://api.github.com/search/repositories",
 url: "ajaxPrdAll",

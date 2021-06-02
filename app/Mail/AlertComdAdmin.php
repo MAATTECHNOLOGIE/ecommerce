@@ -21,13 +21,20 @@ class AlertComdAdmin extends Mailable
     public $cltNom;
     public $cltTel;
     public $montant;
-    public function __construct($subject,$cltNom,$cltTel,$montant,$numCmd)
+    public $paysLiv;
+    public $vilLiv;
+    public $coutLiv;
+
+    public function __construct($subject,$cltNom,$cltTel,$montant,$numCmd,$paysLiv,$vilLiv,$coutLiv)
     {
        $this->cltNom = $cltNom;
        $this->cltTel = $cltTel;
        $this->montant = $montant;
        $this->subject = $subject;
        $this->numCmd = $numCmd;
+       $this->paysLiv =$paysLiv;
+       $this->vilLiv =$vilLiv;
+       $this->coutLiv =$coutLiv;
     }
 
     /**

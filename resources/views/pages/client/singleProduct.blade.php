@@ -335,26 +335,25 @@
       var nbQt = $("#qteAchat").val();
 
       //Pour epaisseur
-      @if(!($epaisseurEl->isEmpty()))
-        var epaisseur = $('#epaisseurListe').val();
-      @else
-        var epaisseur = 1;
-      @endif
+        @if(!($epaisseurEl->isEmpty()))
+          var epaisseur = $('#epaisseurListe').val();
+        @else
+          var epaisseur = 1;
+        @endif
 
       //Pour taille
-      @if(!($tailleEl->isEmpty()))
-        var taille = $('#tailleListe').val();
-      @else
-        var taille = 1;
-      @endif
+        @if(!($tailleEl->isEmpty()))
+          var taille = $('#tailleListe').val();
+        @else
+          var taille = 1;
+        @endif
 
       //Pour pointure
-      @if(!($pointureEl->isEmpty()))
-        var pointure = $('#pointureListe').val();
-      @else
-        var pointure = 1;
-      @endif
-
+        @if(!($pointureEl->isEmpty()))
+          var pointure = $('#pointureListe').val();
+        @else
+          var pointure = 1;
+        @endif
 
      $.ajax({
        url:'AddCart',
@@ -364,14 +363,19 @@
        success:function(data){
          $(".nbCart").text(data.count);
          $("#valPanier").text(data.montant);
-         sw
+            Swal.fire({
+              position: 'top-end',
+              icon: 'success',
+              title: 'Ajouté au panier avec succès',
+              showConfirmButton: false,
+              timer: 1000
+            })
          console.log(data);
        },
        error:function(data){
          console.log("erreur");
        }
      });
-
 
     })
 
