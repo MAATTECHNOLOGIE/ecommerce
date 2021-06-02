@@ -129,8 +129,27 @@
                      $pointureEl =  $coll->where('type','pointure')->unique();
                      $tailleEl =  $coll->where('type','taille')->unique();
 
-                     // dd($colEl);
+                      //Pour epaisseur
+                      if(!($epaisseurEl->isEmpty()))
+                      {
+
+                        $type ='epaisseur';
+                      }
+
+                    //Pour taille
+                      if(!($tailleEl->isEmpty()))
+                      {
+                        $type ='taille';
+                      }
+                      
+                    //Pour pointure
+                      if(!($pointureEl->isEmpty()))
+                        {
+                        $type = 'pointure';
+                        }
+
                   @endphp
+
                   
                   @if(!($colEl->isEmpty()))
                   @foreach ($colEl as $ele)
@@ -207,7 +226,7 @@
                           </div>
                        @else
                         <div class="alert alert-success" role="alert">
-                         <b>STOCK<span class="alert-link"> : <span class="qte"> {{$prodSg->quantite}}</span></a></b> 
+                         <b>STOCK : <span class="qte"> {{$prodSg->quantite}}</span></a></b> 
                         </div>
                        @endif
                        
@@ -321,37 +340,36 @@
 <script src="{{asset('client/js/theme.min.js')}}"></script>
 <script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
 <script type="text/javascript">
-  
-  $(".produit").click(function(){
-    $("#main_content").load("/produits");
-  });
+  $(function()
+  {
+    //Initialisation des attributs present 
+      @switch($type)
+          @case('epaisseur')
+              var attr = $('#epaisseurListe');
+
+              @break
+          @case('taille')
+              var attr = $('#tailleListe');
+              @break
+          @case('pointure')
+              var attr = $('#pointureListe');
+              @break
+      
+          @default
+              var attr = $('#tailleListe');
+      @endswitch
+      
+      // console.log(attr);
+
+    $(".produit").click(function(){
+      $("#main_content").load("/produits");
+    });
 
  // Ajouter de produit au panier
     $("#buy").click(function(event){
           event.preventDefault();
       var idProd = $('#myPrdId').val();
       var nbQt = $("#qteAchat").val();
-
-      //Pour epaisseur
-        @if(!($epaisseurEl->isEmpty()))
-          var epaisseur = $('#epaisseurListe').val();
-        @else
-          var epaisseur = 1;
-        @endif
-
-      //Pour taille
-        @if(!($tailleEl->isEmpty()))
-          var taille = $('#tailleListe').val();
-        @else
-          var taille = 1;
-        @endif
-
-      //Pour pointure
-        @if(!($pointureEl->isEmpty()))
-          var pointure = $('#pointureListe').val();
-        @else
-          var pointure = 1;
-        @endif
 
      $.ajax({
        url:'AddCart',
@@ -405,12 +423,10 @@
       });
   });
 
-</script>
-<script type='text/javascript'>
-  $(function()
-  {
+
     $('.choixColor').click(function()
     {
+      alert(attr).val();
       var idColor = $(this).attr('idColor');
       var idPrd = $(this).attr('idPrd');
       $('#colorChoix').val(idColor);
@@ -450,8 +466,9 @@
         data:{idprod:idPrd,idColor:idColor,valeur:valeur,attribut:attribut},
         dataType:'json',
         success:function(data){
+          alert('ok');
           console.log(data.qtePd);
-          $(".qte").text(data.qtePd);
+          $("#myQte").text(data.qtePd);
         },
         error:function(data){
            console.log("data");

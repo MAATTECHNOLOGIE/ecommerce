@@ -84,6 +84,8 @@ class AdminController extends Controller
                          <b>STOCK<span class="alert-link"> : '.$qte.'</a></b> 
                         </div>';
                         }
+        //Mis a jour des tailles
+            
                        
           return response()->json(['lien'=>$img->lien,'stock'=>$output]);
 
