@@ -115,7 +115,9 @@
             <div class="col-lg-5 pt-4 pt-lg-0">
               <div class="product-details ml-auto pb-3">
                 @foreach ($prodSingle as $prodSg)
-                 <div class="mb-3"><span class="h3 font-weight-normal text-primary mr-1">{{$prodSg->prix}} {{getTDevise()}}</span>
+                 <div class="mb-3">
+                  <span class="h3 font-weight-normal text-primary mr-1">{{$prodSg->prix}} {{getTDevise()}}</span>
+                  <input type="hidden" id="myPrdId" value="{{ $prodSg->produitsID }}">
                  </div>
                 @endforeach
                 
@@ -125,35 +127,7 @@
                     if (!$coll->isEmpty())
                     {
                       $colEl =  $coll->where('type','couleur')->unique();
-                       $epaisseurEl =  $coll->where('type','epaisseur')->unique();
-                       $pointureEl =  $coll->where('type','pointure')->unique();
-                       $tailleEl =  $coll->where('type','taille')->unique();
-
-
-                      //Pour COULEUR
-                      if(!($colEl->isEmpty()))
-                      {
-
-                        $type ='couleur';
-                      }
-                      //Pour epaisseur
-                      if(!($epaisseurEl->isEmpty()))
-                      {
-
-                        $type ='epaisseur';
-                      }
-
-                     //Pour taille
-                      if(!($tailleEl->isEmpty()))
-                      {
-                        $type ='taille';
-                      }
-                      
-                     //Pour pointure
-                      if(!($pointureEl->isEmpty()))
-                        {
-                        $type = 'pointure';
-                        }
+                      $type = 'couleur';
                     }
                     else{
 
@@ -164,7 +138,6 @@
 
                   {{-- verifie si le produit a o moin 01 attribut --}}
                   @if($type != 'Aucun')                  
-                    @if(!($colEl->isEmpty()))
                       <div class="font-size-sm mb-4"><span class="text-heading font-weight-medium mr-1">Couleur:</span>
                        <span class="text-muted" id="colorOption"></span>
                       <div class="position-relative mr-n4 mb-3">
@@ -181,55 +154,12 @@
                           </div>
                         @endforeach
                       </div>
-                    @endif
+                    </div>
 
                     {{-- FORMULAIRE DES ATTRIBUTS POUR PRD AVEC OPTION --}}
-                    <form class="mb-grid-gutter" method="post" id="formAttri">
-                      <!-- Taille -->
-                      <input type="hidden" value="{{ $prodSg->produitsID }}" id="myPrdId" name="myPrdId">
-                      <input type="hidden" name="couleur" id="colorChoix" value="1">
-                      @if(!($tailleEl->isEmpty()))
-                        <div class="form-group">
-                          <div class="d-flex justify-content-between align-items-center pb-1">
-                            <label class="font-weight-medium" for="product-size">Taille:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
-                          </div>
-                          <select class="custom-select" required id="tailleListe" name="taille" >
-                            <option value="1">choisir la taille</option>
-                            @foreach ($tailleEl as $ele)
-                            <option value="{{$ele->id}}">{{$ele->libelle}}</option>
-                            @endforeach
-                          </select>
-                        </div>
-                      @endif
-                      <!-- Pointure -->
-                      @if(!($pointureEl->isEmpty()))
-                        <div class="form-group">
-                          <div class="d-flex justify-content-between align-items-center pb-1">
-                            <label class="font-weight-medium" for="product-size">Pointure:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
-                          </div>
-                          <select class="custom-select" required id="pointureListe" name="pointure" >
-                            <option value="1">choisir la pointure</option>
-                            @foreach ($pointureEl as $ele)
-                            <option value="{{$ele->id}}">{{$ele->libelle}}</option>
-                            @endforeach
-                          </select>
-                        </div>
-                      @endif
-                      <!-- Epaisseur -->
-                      @if(!($epaisseurEl->isEmpty()))
-                        <div class="form-group">
-                          <div class="d-flex justify-content-between align-items-center pb-1">
-                            <label class="font-weight-medium" for="product-size">Epaisseur:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
-                          </div>
-                          <select class="custom-select" required id="epaisseurListe" name="epaisseur" >
-                            <option value="1">Choisir l'Epaisseur</option>
-                            @foreach ($epaisseurEl as $ele)
-                            <option value="{{$ele->id}}">{{$ele->libelle}}</option>
-                            @endforeach
-                          </select>
-                        </div>
-                      @endif
-                      <!-- Alert -->
+                      <form class="mb-grid-gutter" method="post" >
+                        <span id="formAttri"></span>
+
                       <div class="form-group">
                         <div class="d-flex justify-content-between align-items-center pb-1" id="msgStock">
                          <!-- Primary alert -->
@@ -267,9 +197,23 @@
                           </span>
                         </div>
 
+<script type="text/javascript">
+$(function()
+{
+$("#buy").click(function(){
+  if( !$('input[name=color]').is(':checked') )
+  {
+Swal.fire({
+  icon: 'error',
+  title: 'Ooups...',
+  text: 'Veuillez choisir la couleur!',
+})
+} 
+});
+})
+</script>
                       </div>
                     </form>
-                      <input type="hidden" name="" value="1" id="aucun">
                     {{-- FIN FORMULAIRE DES ATTRIBUTS POUR PRD AVEC OPTION --}}
                   @else
                     {{-- AFFICHAGE DES ELEMENT PRD SANS OPTIONS --}}
@@ -321,7 +265,7 @@
                  
                   <h6 class="d-inline-block align-middle font-size-base my-2 mr-2">
                     Commander via whatsApp
-                    <a class="share-btn  my-2" href="http://wa.me/2250544450567?text=*je suis interressé(e) par le produit: {{$prodSg->nom}}. {{env('APP_URL')}}/viewPrd?id={{$prodSg->produitsID}}">
+                    <a class="share-btn  my-2" target="_blank" href="http://wa.me/2250544450567?text=*je suis interressé(e) par l'article  {{$prodSg->nom}} sur votre site* {{env('APP_URL')}}/viewPrd?id={{$prodSg->produitsID}}">
                       <span class="text-success"><i class="czi-message"></i> WhatsApp</span> 
                     </a>
                   </h6>
@@ -401,32 +345,13 @@
 </div>
 
 
+
 <script src="{{asset('client/js/theme.min.js')}}"></script>
 <script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
 <script type="text/javascript">
   $(function()
   {
-    //Initialisation des attributs present 
-      @switch($type)
-          @case('epaisseur')
-              var attr = $('#epaisseurListe');
-
-              @break
-          @case('couleur')
-              var attr = $('#colorOption');
-
-              @break
-          @case('taille')
-              var attr = $('#tailleListe');
-              @break
-          @case('pointure')
-              var attr = $('#pointureListe');
-              @break
-      
-          @default
-              var attr = $('#aucun');
-      @endswitch
-      
+     
 
     $(".produit").click(function(){
       $("#main_content").load("/produits");
@@ -510,22 +435,21 @@
     {
       var idColor = $(this).attr('idColor');
       var idPrd = $(this).attr('idPrd');
-      $('#colorChoix').val(idColor);
       $.ajax({
         url:'choixColor',
         method:'GET',
-        data:{idColor:idColor,idPrd:idPrd,idAttr:attr.val()},
+        data:{idColor:idColor,idPrd:idPrd},
         dataType:'json',
         success:function(data){
           var imgPrd=$('#imgPrd');
           var msgStock = $('#msgStock');
+          var formAttri = $('#formAttri');
           imgPrd.attr('src',data.lien);
           imgPrd.attr('data-zoom',data.lien);
           msgStock.html(data.stock);
-          attr.html(data.option);
-          $('#idPrdStock').val(data.idStock);
-
-        },
+          formAttri.html(data.nextOpt);
+          console.log(data.nextOpt)
+         },
         error:function(data){
            console.log("data");
         }
@@ -533,80 +457,9 @@
 
     })
 
-
-    //Evenement choix taille
-    $('#tailleListe').change(function()
-    {
-      var color = $("input[name='color']:checked");
-      var idColor = color.attr('idColor');
-      var idPrd   = $('#myPrdId').val();
-      var valeur  = $( "#tailleListe option:selected" ).val();
-      var attribut = "taille";
-      console.log("color:"+idColor+" valeur: "+valeur+" idPrd: "+idPrd);
-      $.ajax({
-        url:'geToption',
-        method:'GET',
-        data:{idprod:idPrd,idColor:idColor,valeur:valeur,attribut:attribut},
-        dataType:'json',
-        success:function(data){
-          $('#idPrdStock').val(data.stockId);
-          $("#msgStock").html(data.stockHtml);
-        },
-        error:function(data){
-           console.log("data");
-        }
-      });
-
-    })
-    //Evenement choix epaisseur
-    $('#epaisseurListe').change(function()
-    {
-      var idColor  = $('.choixColor').attr('idColor');
-      var idPrd    = $('#myPrdId').val();
-      var valeur   = $("#epaisseurListe option:selected" ).val();
-      var attribut = "epaisseur";
-      console.log("color:"+idColor+" valeur: "+valeur+" idPrd: "+idPrd);
-      var idPrd = $('#myPrdId').val();
-      $.ajax({
-        url:'geToption',
-        method:'GET',
-        data:{idprod:idPrd,idColor:idColor,valeur:valeur,attribut:attribut},
-        dataType:'json',
-        success:function(data){
-          console.log(data.qtePd);
-          $(".qte").text(data.qtePd);
-        },
-        error:function(data){
-           console.log("data");
-        }
-      });
-
-    })
-    
-    //Evenement choix pointure
-    $('#pointureListe').change(function()
-    {
-      var idColor  = $('.choixColor').attr('idColor');
-      var idPrd    = $('#myPrdId').val();
-      var valeur   = $("#pointureListe option:selected" ).val();
-      var attribut = "pointure";
-      console.log("color:"+idColor+" Valeur: "+valeur+" idPrd: "+idPrd);
-      $.ajax({
-        url:'geToption',
-        method:'GET',
-        data:{idprod:idPrd,idColor:idColor,valeur:valeur,attribut:attribut},
-        dataType:'json',
-        success:function(data){
-          console.log(data.qtePd);
-          $(".qte").text(data.qtePd);
-        },
-        error:function(data){
-           console.log("data");
-        }
-      });
-
-    })
-
+    //Code jquery actionnant le select de l'attribut
+    //Voir AdminController => function choixColor
+      // EXTRAIT $('#nexAttr').change(function()...
 
   })
 </script>

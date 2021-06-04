@@ -67,19 +67,43 @@ class AdminController extends Controller
   {
     $idColor = $request->idColor;
     $idPrd = $request->idPrd;
-    $idAttr = $request->idAttr;
 
-    //Information de l'attribut soumis
-      $attrSend = attributs::find($idAttr);
-      // dd($attrSend);
 
-    $img = img_prd_by_color::where('produits_id',$idPrd)->where('attributs_id',$idColor)->first();
-    //Selection de qte dans stock
-      $prdStock = stock_prd::where('produits_id','=',$idPrd)->where('couleur','=',$idColor)->get();
-      $qte = $prdStock->sum('qte');
-      $output = '';
-                      
-                       if ($qte==0)
+    //Recuperation de l'image 
+      $img = img_prd_by_color::where('produits_id',$idPrd)->where('attributs_id',$idColor)->first();
+    //Information sur les attributs du prd
+      $mesAttrPrd = getProdAtrb($idPrd);
+          $epaisseurEl =  $mesAttrPrd->where('type','epaisseur')->unique();
+          $pointureEl =  $mesAttrPrd->where('type','pointure')->unique();
+          $tailleEl =  $mesAttrPrd->where('type','taille')->unique();
+
+          //Recherche de la segond propriéte apres couleur
+          if(!($epaisseurEl->isEmpty()))
+          {
+            $type ='epaisseur';
+            $attr = $epaisseurEl;
+          }
+          elseif(!$tailleEl->isEmpty())
+          {
+            $type ='taille';
+            $attr = $tailleEl;
+          }
+          elseif (!($pointureEl->isEmpty())) 
+          {
+            $type = 'pointure';
+            $attr = $pointureEl;
+          }
+          else
+          {
+            $type= 'Aucun autre attribut';
+            //Retourne l'image et le stock
+            $prdStock = stock_prd::where('produits_id','=',$idPrd)->where('couleur','=',$idColor)
+                                    ->where('taille','=','1')->where('pointure','=','1')
+                                    ->where('epaisseur','=','1')->first();
+                    //Retour de l'id stock en js
+                      $output ='<script type="text/javascript">$("#idPrdStock").val('.$prdStock->id.')</script>';
+
+                       if ($prdStock->qte ==0)
                         {
                           $output .= '<div class="alert alert-warning" role="alert">
                                                    <b>STOCK<span class="alert-link"> : rupture</a></b>
@@ -88,33 +112,67 @@ class AdminController extends Controller
                         else
                         {
                           $output .= '<div class="alert alert-success" role="alert">
-                         <b>STOCK : <span class="qte" id="myQte">'.$qte.'</a></b> 
+                         <b>STOCK : <span class="qte" id="myQte">'.$prdStock->qte.'</a></b> 
                         </div>';
                         }
 
+                        return response()->json(['lien'=>$img->lien,'stock'=>$output,"nextOpt"=>'']);
+          }
 
-            $outputOpt='<option value="1">-- Choix -- </option>';
-             if ($attrSend->type != 'Aucun') 
-             {
-                //Mis a jour de l'attribut suivant
-                  $attr = $prdStock->where($attrSend->type,'!=',1);
-                  foreach ($attr as $item)
-                  {
-                    
-                    $outputOpt.='<option value="'.$item->taille.'">'.getAttriById($item->taille)->libelle.'</option>';
-                     
-                  };
+    //Selection de qte dans stock
+      $prdStock = stock_prd::where('produits_id','=',$idPrd)->where('couleur','=',$idColor)->get();
+      $attr = $prdStock->where($type,'!=',1);
+       $qte = $prdStock->sum('qte');
 
-              $idStock = 0; //on ne peut determiner le id du produit dans la table stock
-             }
-             else
-             {
-              $idStock = $prdStock->first()->id; //determine le id du produit dans la table stock
-             }
+       //Retour de action au click du btn ajouter
+            $stockCode ='<script type="text/javascript">$("#buy").click(function(){if($("#idPrdStock").val() == "") {Swal.fire("Veuillez choisir une '.$type.'")}})</script>';
+      //Actualisation stock
+          if ($qte ==0)
+          {
+            $stockCode .= '<div class="alert alert-warning" role="alert"><b>STOCK
+                          <span class="alert-link"> : rupture</a></b</div>';
+          }
+          else
+          {
+            $stockCode .= '<div class="alert alert-success" role="alert">
+                        <b>STOCK : <span class="qte" id="myQte">'.$qte.'</a></b></div>';
+          }
+      //Mis a jour de l'attribut suivant
+      $output = ''; 
+      $output.='<div class="form-group">';
+        $output.='<div class="d-flex justify-content-between align-items-center pb-1">';
+          $output.='<label class="font-weight-medium" for="nexAttr">'.$type.' :</label><a class="nav-link-style font-size-sm" href="#size-chart"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a></div>';
+        $output.='<select class="custom-select" required id="nexAttr">';
+          $output.='<option value="1">-- Choix --</option>';                      
+              foreach ($attr as $ele)
+              {$output.='<option value="'.$ele->$type.'">'.getAttriById($ele->$type)->libelle.'</option>';}
+        $output.='</select></div><input type="hidden" id="typeAttr" value="'.$type.'">';
+
+    $output.="<script type='text/javascript'>
+    $('#nexAttr').change(function()
+      {
+      var idColor = ".$idColor.";
+      var idPrd   = $('#myPrdId').val();
+      var idAttr  = $( '#nexAttr option:selected' ).val();
+      var typeAttr = $('#typeAttr').val();
+      $.ajax({
+        url:'geToption',
+        method:'GET',
+        data:{idprod:idPrd,idColor:idColor,idAttr:idAttr,typeAttr:typeAttr},
+        dataType:'json',
+        success:function(data){
+          $('#idPrdStock').val(data.stockId);
+          $('#msgStock').html(data.stockHtml);
+        },
+        error:function(data){
+           console.log('data');
+        }
+      });
+
+    })</script>";
 
 
-      
-          return response()->json(['lien'=>$img->lien,'stock'=>$output,'option'=>$outputOpt,'idStock'=>$idStock]);
+          return response()->json(['lien'=>$img->lien,'stock'=>$stockCode,"nextOpt"=>$output]);
 
   }
 
@@ -122,15 +180,14 @@ class AdminController extends Controller
   public function geToption(Request $request)
   {
     // Réception des données
-      $valeur   = $request->valeur;
-      $attribut = $request->attribut;
+      $idAttr   = $request->idAttr;
+      $typeAttr = $request->typeAttr;
       $idprod   = $request->idprod;
       $idColor  = $request->idColor;
-      // dd($attribut);
+
       $prdStock = stock_prd::where('produits_id','=',$idprod)
                               ->where('couleur','=',$idColor)
-                              ->where('taille','=',$valeur)->first();
-
+                              ->where($typeAttr,'=',$idAttr)->first();
 
                        if ($prdStock->qte==0)
                         {
@@ -147,26 +204,7 @@ class AdminController extends Controller
 
           return response()->json(['stockHtml'=>$stockHtml,'stockId'=> $prdStock->id]);  
 
-    // // Qte en fonction de la taille
-    //  if ($attribut=='taille') 
-    //  {
-    //    $stock = getQtebyTaille($idprod,$idColor,$valeur)->sum('qte');
-    //    return response()->json(['qtePd'=>$stock]);       
-    //  }
-    // // Qte en fonction de la pointure
-    //   if ($attribut=='pointure') 
-    //   {
-    //    $stock = getQtebyPointure($idprod,$idColor,$valeur)->sum('qte');
-    //    return response()->json(['qtePd'=>$stock]);       
-    //   }
 
-    // // Qte en fonction l'épaisseur
-    //   if ($attribut=='epaisseur') 
-    //   {
-    //    $stock = getQtebyEpaisseur($idprod,$idColor,$valeur)->sum('qte');
-    //    return response()->json(['qtePd'=>$stock]);       
-    //   }
- 
 
 
   }
@@ -190,7 +228,7 @@ class AdminController extends Controller
           	 $imageP = $lien.$path;
 
             //Redimensionnement image
-              resize_img($imageP,$imageP); 
+              // resize_img($imageP,$imageP); 
 
           	// Infos images
              $infos=['nom'=>$request->produit,
