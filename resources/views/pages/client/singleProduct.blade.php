@@ -118,17 +118,24 @@
                  <div class="mb-3"><span class="h3 font-weight-normal text-primary mr-1">{{$prodSg->prix}} {{getTDevise()}}</span>
                  </div>
                 @endforeach
-                <div class="font-size-sm mb-4"><span class="text-heading font-weight-medium mr-1">Couleur:</span>
-                 <span class="text-muted" id="colorOption"></span>
-                <div class="position-relative mr-n4 mb-3">
-                  
+                
                   @php
                      $coll = getProdAtrb($prodSg->produitsID);
-                     $colEl =  $coll->where('type','couleur')->unique();
-                     $epaisseurEl =  $coll->where('type','epaisseur')->unique();
-                     $pointureEl =  $coll->where('type','pointure')->unique();
-                     $tailleEl =  $coll->where('type','taille')->unique();
 
+                    if (!$coll->isEmpty())
+                    {
+                      $colEl =  $coll->where('type','couleur')->unique();
+                       $epaisseurEl =  $coll->where('type','epaisseur')->unique();
+                       $pointureEl =  $coll->where('type','pointure')->unique();
+                       $tailleEl =  $coll->where('type','taille')->unique();
+
+
+                      //Pour COULEUR
+                      if(!($colEl->isEmpty()))
+                      {
+
+                        $type ='couleur';
+                      }
                       //Pour epaisseur
                       if(!($epaisseurEl->isEmpty()))
                       {
@@ -136,120 +143,178 @@
                         $type ='epaisseur';
                       }
 
-                    //Pour taille
+                     //Pour taille
                       if(!($tailleEl->isEmpty()))
                       {
                         $type ='taille';
                       }
                       
-                    //Pour pointure
+                     //Pour pointure
                       if(!($pointureEl->isEmpty()))
                         {
                         $type = 'pointure';
                         }
+                    }
+                    else{
 
+                      $myStock = getStockByIdPrd($prodSg->produitsID)->first();
+                      $type = 'Aucun';
+                    }
                   @endphp
 
-                  
-                  @if(!($colEl->isEmpty()))
-                  @foreach ($colEl as $ele)
-                  <div class="custom-control custom-option custom-control-inline mb-2">
-                    <input class="custom-control-input choixColor" type="radio" name="color" 
-                    idColor="{{$ele->id}}" id="{{'color'.$ele->id}}"
-                           data-label="colorOption" value="{{$ele->libelle}}" idPrd={{$prodSg->produitsID}}>
-                        <label class="custom-option-label rounded-circle border border-dark" for="{{'color'.$ele->id}}">
-                          <span class="custom-option-color rounded-circle" 
-                              style="background-color: {{$ele->code}};">
-                          </span>
-                        </label>
-                  </div>
-                      
-                  @endforeach
-                  @endif
-
-                  
-                </div>
-                <form class="mb-grid-gutter" method="post" id="formAttri">
-                  <!-- Taille -->
-                  <input type="hidden" value="{{ $prodSg->produitsID }}" id="myPrdId" name="myPrdId">
-                  <input type="hidden" name="couleur" id="colorChoix" value="1">
-                  @if(!($tailleEl->isEmpty()))
-                    <div class="form-group">
-                      <div class="d-flex justify-content-between align-items-center pb-1">
-                        <label class="font-weight-medium" for="product-size">Taille:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
-                      </div>
-                      <select class="custom-select" required id="tailleListe" name="taille" >
-                        <option value="">choisir la taille</option>
-                        @foreach ($tailleEl as $ele)
-                        <option value="{{$ele->id}}">{{$ele->libelle}}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  @endif
-                  <!-- Pointure -->
-                  @if(!($pointureEl->isEmpty()))
-                    <div class="form-group">
-                      <div class="d-flex justify-content-between align-items-center pb-1">
-                        <label class="font-weight-medium" for="product-size">Pointure:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
-                      </div>
-                      <select class="custom-select" required id="pointureListe" name="pointure" >
-                        <option value="">choisir la pointure</option>
-                        @foreach ($pointureEl as $ele)
-                        <option value="{{$ele->id}}">{{$ele->libelle}}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  @endif
-                  <!-- Epaisseur -->
-                  @if(!($epaisseurEl->isEmpty()))
-                    <div class="form-group">
-                      <div class="d-flex justify-content-between align-items-center pb-1">
-                        <label class="font-weight-medium" for="product-size">Epaisseur:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
-                      </div>
-                      <select class="custom-select" required id="epaisseurListe" name="epaisseur" >
-                        <option value="">Choisir l'Epaisseur</option>
-                        @foreach ($epaisseurEl as $ele)
-                        <option value="{{$ele->id}}">{{$ele->libelle}}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  @endif
-                  <!-- Alert -->
-                  <div class="form-group">
-                    <div class="d-flex justify-content-between align-items-center pb-1" id="msgStock">
-                     <!-- Primary alert -->
-                     
-                      @foreach ($prodSingle as $prodSg)
-                       @if ($prodSg->quantite==0)
-                          <div class="alert alert-warning" role="alert">
-                           <b>STOCK<span class="alert-link"> : rupture</a></b>
+                  {{-- verifie si le produit a o moin 01 attribut --}}
+                  @if($type != 'Aucun')                  
+                    @if(!($colEl->isEmpty()))
+                      <div class="font-size-sm mb-4"><span class="text-heading font-weight-medium mr-1">Couleur:</span>
+                       <span class="text-muted" id="colorOption"></span>
+                      <div class="position-relative mr-n4 mb-3">
+                        @foreach($colEl as $ele)
+                          <div class="custom-control custom-option custom-control-inline mb-2">
+                            <input class="custom-control-input choixColor" type="radio" name="color" 
+                            idColor="{{$ele->id}}" id="{{'color'.$ele->id}}"
+                                   data-label="colorOption" value="{{$ele->libelle}}" idPrd={{$prodSg->produitsID}}>
+                                <label class="custom-option-label rounded-circle border border-dark" for="{{'color'.$ele->id}}">
+                                  <span class="custom-option-color rounded-circle" 
+                                      style="background-color: {{$ele->code}};">
+                                  </span>
+                                </label>
                           </div>
-                       @else
-                        <div class="alert alert-success" role="alert">
-                         <b>STOCK : <span class="qte"> {{$prodSg->quantite}}</span></a></b> 
+                        @endforeach
+                      </div>
+                    @endif
+
+                    {{-- FORMULAIRE DES ATTRIBUTS POUR PRD AVEC OPTION --}}
+                    <form class="mb-grid-gutter" method="post" id="formAttri">
+                      <!-- Taille -->
+                      <input type="hidden" value="{{ $prodSg->produitsID }}" id="myPrdId" name="myPrdId">
+                      <input type="hidden" name="couleur" id="colorChoix" value="1">
+                      @if(!($tailleEl->isEmpty()))
+                        <div class="form-group">
+                          <div class="d-flex justify-content-between align-items-center pb-1">
+                            <label class="font-weight-medium" for="product-size">Taille:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
+                          </div>
+                          <select class="custom-select" required id="tailleListe" name="taille" >
+                            <option value="1">choisir la taille</option>
+                            @foreach ($tailleEl as $ele)
+                            <option value="{{$ele->id}}">{{$ele->libelle}}</option>
+                            @endforeach
+                          </select>
                         </div>
-                       @endif
-                       
-                      @endforeach
-                      
-                    </div>
-                    
-                  </div>
+                      @endif
+                      <!-- Pointure -->
+                      @if(!($pointureEl->isEmpty()))
+                        <div class="form-group">
+                          <div class="d-flex justify-content-between align-items-center pb-1">
+                            <label class="font-weight-medium" for="product-size">Pointure:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
+                          </div>
+                          <select class="custom-select" required id="pointureListe" name="pointure" >
+                            <option value="1">choisir la pointure</option>
+                            @foreach ($pointureEl as $ele)
+                            <option value="{{$ele->id}}">{{$ele->libelle}}</option>
+                            @endforeach
+                          </select>
+                        </div>
+                      @endif
+                      <!-- Epaisseur -->
+                      @if(!($epaisseurEl->isEmpty()))
+                        <div class="form-group">
+                          <div class="d-flex justify-content-between align-items-center pb-1">
+                            <label class="font-weight-medium" for="product-size">Epaisseur:</label><a class="nav-link-style font-size-sm" href="#size-chart" data-toggle="modal"><i class="czi-ruler lead align-middle mr-1 mt-n1"></i></a>
+                          </div>
+                          <select class="custom-select" required id="epaisseurListe" name="epaisseur" >
+                            <option value="1">Choisir l'Epaisseur</option>
+                            @foreach ($epaisseurEl as $ele)
+                            <option value="{{$ele->id}}">{{$ele->libelle}}</option>
+                            @endforeach
+                          </select>
+                        </div>
+                      @endif
+                      <!-- Alert -->
+                      <div class="form-group">
+                        <div class="d-flex justify-content-between align-items-center pb-1" id="msgStock">
+                         <!-- Primary alert -->
+                         
+                          @foreach ($prodSingle as $prodSg)
+                           @if ($prodSg->quantite==0)
+                              <div class="alert alert-warning" role="alert">
+                               <b>STOCK<span class="alert-link"> : rupture</b>
+                              </div>
+                           @else
+                            <div class="alert alert-success" role="alert">
+                             <b>STOCK : <span class="qte" id="myQte" qte="{{$prodSg->quantite}}">
+                               {{$prodSg->quantite}}</span>
+                             </b> 
+                            </div>
+                           @endif
+                           
+                          @endforeach
+                          
+                        </div>
+                        
+                      </div>
 
-                  <div class="form-group d-flex align-items-center">
- 
-                  <div class="form-group col-4">
-                    {{-- <label for="number-input">Quantité</label> --}}
-                    <input class="form-control" type="number" id="qteAchat" value="01">
-                  </div>
-                  <div class="form-group">
-                    <button class="btn btn-primary btn-shadow btn-block"  id="buy">
-                      <i class="czi-cart font-size-lg mr-2"></i>Ajouter au panier
-                    </button>
-                  </div>
+                      <div class="form-group d-flex align-items-center">
+     
+                        <div class="form-group col-4">
+                          {{-- <label for="number-input">Quantité</label> --}}
+                          <input class="form-control" type="number" id="qteAchat" value="1">
+                        </div>
+                        <div class="form-group">
+                          {{-- HIIDEN POUR LE ID DEU PRD EN STOCK --}}
+                          <input type="hidden" id="idPrdStock" name="idPrdStock" value="">
+                          <span class="btn btn-primary btn-shadow btn-block"  id="buy">
+                            <i class="czi-cart font-size-lg mr-2"></i>Ajouter au panier
+                          </span>
+                        </div>
 
-                  </div>
-                </form>
+                      </div>
+                    </form>
+                      <input type="hidden" name="" value="1" id="aucun">
+                    {{-- FIN FORMULAIRE DES ATTRIBUTS POUR PRD AVEC OPTION --}}
+                  @else
+                    {{-- AFFICHAGE DES ELEMENT PRD SANS OPTIONS --}}
+                      <input type="hidden" name="" value="1" id="aucun">
+                      <div class="form-group">
+                        <div class="d-flex justify-content-between align-items-center pb-1" id="msgStock">
+                         <!-- Primary alert -->
+                         
+                          @foreach ($prodSingle as $prodSg)
+                           @if ($prodSg->quantite==0)
+                              <div class="alert alert-warning" role="alert">
+                               <b>STOCK<span class="alert-link"> : rupture</b>
+                              </div>
+                           @else
+                            <div class="alert alert-success" role="alert">
+                             <b>STOCK : <span class="qte" id="myQte" qte="{{$prodSg->quantite}}">
+                               {{$prodSg->quantite}}</span>
+                             </b> 
+                            </div>
+                           @endif
+                           
+                          @endforeach
+                          
+                        </div>
+                      </div>
+                      <div class="form-group d-flex align-items-center">
+     
+                        <div class="form-group col-4">
+                          {{-- <label for="number-input">Quantité</label> --}}
+                          <input class="form-control" type="number" id="qteAchat" value="1">
+                        </div>
+                        <div class="form-group">
+                          {{-- HIIDEN POUR LE ID DEU PRD EN STOCK --}}
+                          <input type="hidden" id="idPrdStock" name="idPrdStock" value="{{ $myStock->id }}">
+                          <span class="btn btn-primary btn-shadow btn-block"  id="buy">
+                            <i class="czi-cart font-size-lg mr-2"></i>Ajouter au panier
+                          </span>
+                        </div>
+                      </div>
+                    {{-- FIN AFFICHAGE DES ELEMENT PRD SANS OPTIONS --}}
+                  @endif
+
+
+
+
                 <!-- Product panels-->
                 @foreach ($prodSingle as $prodSg)
                  <div class="accordion mb-4" id="productPanels">
@@ -257,7 +322,7 @@
                   <h6 class="d-inline-block align-middle font-size-base my-2 mr-2">
                     Commander via whatsApp
                     <a class="share-btn  my-2" href="http://wa.me/2250544450567?text=*je suis interressé(e) par le produit: {{$prodSg->nom}}. {{env('APP_URL')}}/viewPrd?id={{$prodSg->produitsID}}">
-                      <span class="text-success"><i class="czi-message"></i> WahtsApp</span> 
+                      <span class="text-success"><i class="czi-message"></i> WhatsApp</span> 
                     </a>
                   </h6>
                   
@@ -336,7 +401,6 @@
 </div>
 
 
-
 <script src="{{asset('client/js/theme.min.js')}}"></script>
 <script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
 <script type="text/javascript">
@@ -348,6 +412,10 @@
               var attr = $('#epaisseurListe');
 
               @break
+          @case('couleur')
+              var attr = $('#colorOption');
+
+              @break
           @case('taille')
               var attr = $('#tailleListe');
               @break
@@ -356,10 +424,9 @@
               @break
       
           @default
-              var attr = $('#tailleListe');
+              var attr = $('#aucun');
       @endswitch
       
-      // console.log(attr);
 
     $(".produit").click(function(){
       $("#main_content").load("/produits");
@@ -367,31 +434,46 @@
 
  // Ajouter de produit au panier
     $("#buy").click(function(event){
-          event.preventDefault();
-      var idProd = $('#myPrdId').val();
+      // event.preventDefault();
+      var qtStock = parseInt($('#myQte').text());
+      // var qtStock = $("myQte").attr("qte");
       var nbQt = $("#qteAchat").val();
+      //console.log(qtStock);
+      if (qtStock >= nbQt) 
+      {
+         $.ajax({
+           url:'AddCart',
+           method:'get',
+           data:{idProdStock:$('#idPrdStock').val(),nbQt:nbQt},
+           dataType:'json',
+           success:function(data){
+             $(".nbCart").text(data.count);
+             $("#valPanier").text(data.montant);
+                Swal.fire({
+                  position: 'top-end',
+                  icon: 'success',
+                  title: 'Ajouté au panier avec succès',
+                  showConfirmButton: false,
+                  timer: 1000
+                })
+             //console.log(data);
+           },
+           error:function(data){
+             console.log("erreur");
+           }
+         });
+      }
+      else
+      {
+          Swal.fire({
+                  position: 'top-end',
+                  icon: 'error',
+                  title: 'Quantite insuffisante en stock',
+                  showConfirmButton: false,
+                  timer: 1000
+                })
 
-     $.ajax({
-       url:'AddCart',
-       method:'get',
-       data:{idProd:idProd,nbQt:nbQt,taille:taille,pointure:pointure,epaisseur:epaisseur},
-       dataType:'json',
-       success:function(data){
-         $(".nbCart").text(data.count);
-         $("#valPanier").text(data.montant);
-            Swal.fire({
-              position: 'top-end',
-              icon: 'success',
-              title: 'Ajouté au panier avec succès',
-              showConfirmButton: false,
-              timer: 1000
-            })
-         console.log(data);
-       },
-       error:function(data){
-         console.log("erreur");
-       }
-     });
+      }
 
     })
 
@@ -426,14 +508,13 @@
 
     $('.choixColor').click(function()
     {
-      alert(attr).val();
       var idColor = $(this).attr('idColor');
       var idPrd = $(this).attr('idPrd');
       $('#colorChoix').val(idColor);
       $.ajax({
         url:'choixColor',
         method:'GET',
-        data:{idColor:idColor,idPrd:idPrd},
+        data:{idColor:idColor,idPrd:idPrd,idAttr:attr.val()},
         dataType:'json',
         success:function(data){
           var imgPrd=$('#imgPrd');
@@ -441,7 +522,8 @@
           imgPrd.attr('src',data.lien);
           imgPrd.attr('data-zoom',data.lien);
           msgStock.html(data.stock);
-
+          attr.html(data.option);
+          $('#idPrdStock').val(data.idStock);
 
         },
         error:function(data){
@@ -455,7 +537,8 @@
     //Evenement choix taille
     $('#tailleListe').change(function()
     {
-      var idColor = $('.choixColor').attr('idColor');
+      var color = $("input[name='color']:checked");
+      var idColor = color.attr('idColor');
       var idPrd   = $('#myPrdId').val();
       var valeur  = $( "#tailleListe option:selected" ).val();
       var attribut = "taille";
@@ -466,9 +549,8 @@
         data:{idprod:idPrd,idColor:idColor,valeur:valeur,attribut:attribut},
         dataType:'json',
         success:function(data){
-          alert('ok');
-          console.log(data.qtePd);
-          $("#myQte").text(data.qtePd);
+          $('#idPrdStock').val(data.stockId);
+          $("#msgStock").html(data.stockHtml);
         },
         error:function(data){
            console.log("data");

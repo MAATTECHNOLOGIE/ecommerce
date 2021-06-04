@@ -33,6 +33,8 @@ Swal.fire({
   cancelButtonColor: '#d33',
   confirmButtonText: 'Oui ajouter',
   cancelButtonText: 'Non, pas d\'option'
+  // closeOnClickOutside: false,
+  // onClose: DeleteUnsavedImages()
 }).then((result) => {
   if (result.isConfirmed) {
 

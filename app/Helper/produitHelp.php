@@ -81,3 +81,16 @@ if(!function_exists('getQtebyPointure'))
          return $qteStock;
 	}
 }
+
+
+// Obtenir Stock d'un Prd by idPrd
+if(!function_exists('getStockByIdPrd'))
+{
+	function getStockByIdPrd($idprd)
+	{
+		$stockByIdPrd = DB::table('stock_prds')
+			->where('stock_prds.produits_id','=', $idprd)
+            ->get();
+         return $stockByIdPrd;
+	}
+}

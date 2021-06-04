@@ -22,6 +22,7 @@ use App\Model\Slide;
 use App\Model\setting;
 use App\Model\stock_prd;
 use App\Model\img_prd_by_color;
+use App\Model\attributs;
 
 use Schema;
 
@@ -66,6 +67,12 @@ class AdminController extends Controller
   {
     $idColor = $request->idColor;
     $idPrd = $request->idPrd;
+    $idAttr = $request->idAttr;
+
+    //Information de l'attribut soumis
+      $attrSend = attributs::find($idAttr);
+      // dd($attrSend);
+
     $img = img_prd_by_color::where('produits_id',$idPrd)->where('attributs_id',$idColor)->first();
     //Selection de qte dans stock
       $prdStock = stock_prd::where('produits_id','=',$idPrd)->where('couleur','=',$idColor)->get();
@@ -81,13 +88,33 @@ class AdminController extends Controller
                         else
                         {
                           $output .= '<div class="alert alert-success" role="alert">
-                         <b>STOCK<span class="alert-link"> : '.$qte.'</a></b> 
+                         <b>STOCK : <span class="qte" id="myQte">'.$qte.'</a></b> 
                         </div>';
                         }
-        //Mis a jour des tailles
-            
-                       
-          return response()->json(['lien'=>$img->lien,'stock'=>$output]);
+
+
+            $outputOpt='<option value="1">-- Choix -- </option>';
+             if ($attrSend->type != 'Aucun') 
+             {
+                //Mis a jour de l'attribut suivant
+                  $attr = $prdStock->where($attrSend->type,'!=',1);
+                  foreach ($attr as $item)
+                  {
+                    
+                    $outputOpt.='<option value="'.$item->taille.'">'.getAttriById($item->taille)->libelle.'</option>';
+                     
+                  };
+
+              $idStock = 0; //on ne peut determiner le id du produit dans la table stock
+             }
+             else
+             {
+              $idStock = $prdStock->first()->id; //determine le id du produit dans la table stock
+             }
+
+
+      
+          return response()->json(['lien'=>$img->lien,'stock'=>$output,'option'=>$outputOpt,'idStock'=>$idStock]);
 
   }
 
@@ -99,25 +126,46 @@ class AdminController extends Controller
       $attribut = $request->attribut;
       $idprod   = $request->idprod;
       $idColor  = $request->idColor;
-    // Qte en fonction de la taille
-     if ($attribut=='taille') 
-     {
-       $stock = getQtebyTaille($idprod,$idColor,$valeur)->sum('qte');
-       return response()->json(['qtePd'=>$stock]);       
-     }
-    // Qte en fonction de la pointure
-      if ($attribut=='pointure') 
-      {
-       $stock = getQtebyPointure($idprod,$idColor,$valeur)->sum('qte');
-       return response()->json(['qtePd'=>$stock]);       
-      }
+      // dd($attribut);
+      $prdStock = stock_prd::where('produits_id','=',$idprod)
+                              ->where('couleur','=',$idColor)
+                              ->where('taille','=',$valeur)->first();
 
-    // Qte en fonction l'épaisseur
-      if ($attribut=='epaisseur') 
-      {
-       $stock = getQtebyEpaisseur($idprod,$idColor,$valeur)->sum('qte');
-       return response()->json(['qtePd'=>$stock]);       
-      }
+
+                       if ($prdStock->qte==0)
+                        {
+                          $stockHtml = '<div class="alert alert-warning" role="alert">
+                                                   <b>STOCK<span class="alert-link"> : rupture</b>
+                                                  </div>';
+                        }
+                        else
+                        {
+                          $stockHtml = '<div class="alert alert-success" role="alert">
+                         <b>STOCK : <span class="qte" id="myQte">'.$prdStock->qte.'</b> 
+                        </div>';
+                        }
+
+          return response()->json(['stockHtml'=>$stockHtml,'stockId'=> $prdStock->id]);  
+
+    // // Qte en fonction de la taille
+    //  if ($attribut=='taille') 
+    //  {
+    //    $stock = getQtebyTaille($idprod,$idColor,$valeur)->sum('qte');
+    //    return response()->json(['qtePd'=>$stock]);       
+    //  }
+    // // Qte en fonction de la pointure
+    //   if ($attribut=='pointure') 
+    //   {
+    //    $stock = getQtebyPointure($idprod,$idColor,$valeur)->sum('qte');
+    //    return response()->json(['qtePd'=>$stock]);       
+    //   }
+
+    // // Qte en fonction l'épaisseur
+    //   if ($attribut=='epaisseur') 
+    //   {
+    //    $stock = getQtebyEpaisseur($idprod,$idColor,$valeur)->sum('qte');
+    //    return response()->json(['qtePd'=>$stock]);       
+    //   }
  
 
 
@@ -434,6 +482,16 @@ class AdminController extends Controller
     {
       if(isset($_SESSION[$request->session])) 
       {
+        if ($request->session == 'savePrd') {
+          //ENREGISTREMEN DU PRD DANS LA TABLE STOCK avec valeur par defaut
+            
+            $prd = Produit::find($_SESSION['savePrd']); //Get the product saved
+            $ele = ['taille' =>1, 'couleur' =>1, 
+                    'pointure' =>1, 'epaisseur' =>1,
+                    'qte' =>$prd->quantite, 'prixPrd' =>$prd->prix, 
+                    'produits_id' =>$prd->id];
+            stock_prd::create($ele);                    //Save to stock
+        }
         unset($_SESSION[$request->session]);
       }
 

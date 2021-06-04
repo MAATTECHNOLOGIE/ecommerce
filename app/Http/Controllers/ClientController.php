@@ -18,6 +18,8 @@ use Hash;
 
 use App\Mail\AlertComdAdmin;
 use App\Mail\AlertComdClt;
+use App\Model\stock_prd;
+use App\Model\img_prd_by_color;
 
 
 
@@ -156,28 +158,33 @@ class ClientController extends Controller
 	public function AddCart(Request $request)
 	{
     //recup les variables
-  	  $idProd = $request->idProd;
+  	  $idProd = $request->idProdStock;
       $nbQt   = $request->nbQt;
-    //   $taille = $request->taille;
-    //   $pointure = $request->pointure;
-    //   $epaisseur = $request->epaisseur;
+
+    $prdEle =stock_prd::find($idProd);
+
+//Recupp image du prd choisit
+    if($prdEle->couleur != 1)
+    {
+      $imgPrdByCol = img_prd_by_color::where('produits_id',$prdEle->produits_id)
+                    ->where('attributs_id',$prdEle->couleur)->first();
+      $img = $imgPrdByCol->lien;
+    }
 
     // //Recup le produit dans le stock
-    //   $prdEle =stock_prd::where('taille','=',$taille)
-    //               ->where('couleur','=',$couleur)
-    //               ->where('pointure','=',$pointure)
-    //               ->where('epaisseur','=',$epaisseur)
-    //               ->where('produits_id','=',$idProd)
-    //               ->first();
-     
+      // unset($_SESSION['panier']);
+      // dd('stop');
+
       if (isset($_SESSION['panier']))
       {
-      	foreach (getTProdId($idProd) as $prod)
+      	foreach (getTProdId($prdEle->produits_id) as $prod)
       	{
+         
       	 $produit = $prod->nom;
-      	 $image = $prod->img;
-      	 $prix = $prod->prix;
-      	 $idPrd = $prod->id;
+      	 $image = isset($img) ? $img : $prod->img;
+      	 $prix = (int)$prdEle->prixPrd;
+         $idPrd = $prdEle->produits_id;
+      	 $idStock = $prdEle->id;
          $idCatg = $prod->categorie_id;
       	}
       	$panier = array(
@@ -185,35 +192,40 @@ class ClientController extends Controller
       	 'image'=>$image,
       	 'prix'=>$prix,
       	 'qte'=>$nbQt,
-      	 'idprd'=>$idPrd,
+         'idprd'=>$idPrd,
+      	 'idStock'=>$idStock,
          'catg'=>$idCatg);
       	$_SESSION["panier"][] = $panier;
       	$nbCart = count($_SESSION["panier"]);
-
-        return response()->json(['count'=>$nbCart,'montant'=>getPrixPanier()]);
       }
       else
       {
-      	foreach (getTProdId($idProd) as $prod)
+      	foreach (getTProdId($prdEle->produits_id) as $prod)
       	{
-      	 $produit = $prod->nom;
-      	 $image = $prod->img;
-      	 $prix = $prod->prix;
-      	 $idPrd = $prod->id;
+        
+         $produit = $prod->nom;
+         $image = isset($img) ? $img : $prod->img;
+         $prix = (int)$prdEle->prixPrd;
+         $idPrd = $prdEle->produits_id;
+         $idStock = $prdEle->id;
          $idCatg = $prod->categorie_id;
       	}
       	 $panier = array(
-      	 'produit'=>$produit,
-      	 'image'=>$image,
-      	 'prix'=>$prix,
-      	 'qte'=>$nbQt,
-         'catg'=>$idCatg,
-      	 'idprd'=>$idPrd);
+         'produit'=>$produit,
+         'image'=>$image,
+         'prix'=>$prix,
+         'qte'=>$nbQt,
+         'idprd'=>$idPrd,
+         'idStock'=>$idStock,
+         'catg'=>$idCatg);
       	//création de session
 		      $_SESSION["panier"][] = $panier;
 		      $nbCart = count($_SESSION["panier"]);
-        return response()->json(['count'=>$nbCart,'montant'=>getPrixPanier()]);
+
       }
+
+        return response()->json(['count'=>$nbCart,'montant'=>getPrixPanier()]);
+
 	}
 
 
