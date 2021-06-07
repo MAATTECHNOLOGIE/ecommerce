@@ -1464,7 +1464,8 @@ class AdminController extends Controller
 	{
 		$pays  = $request->pays;
 		$ville = $request->ville;
-		$cout  = $request->cout;
+    $cout  = $request->cout;
+		$delais  = $request->delais;
 
 
 		$paysV = pays::where('pays','=',$pays)->get()
@@ -1488,7 +1489,8 @@ class AdminController extends Controller
 		$livr = Livraison::create(
 			     ['livraison'=>$cout,
 				  'ville_id'=>$villeID,
-				  'ville_pays_id'=>$paysID
+          'ville_pays_id'=>$paysID,
+				  'delais_liv'=>$delais
 				]);
 		
 	}

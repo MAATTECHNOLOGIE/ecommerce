@@ -119,7 +119,9 @@ class ClientController extends Controller
              {
               $output.="
               <option value=".$dataV->ville_id."
-                liv=".$dataV->livraison.">
+                liv=".$dataV->livraison."
+                delais=".$dataV->delais_liv."
+                >
                 ".$dataV->ville."
               </option>";
              }
@@ -129,7 +131,11 @@ class ClientController extends Controller
       <script type="text/javascript">
        $(".villeC").click(function(){
         var liv=$(this).children("option:selected").attr("liv");
+        var delais=$(this).children("option:selected").attr("delais");
         $(".cout").text(liv);
+        $("#delais").text(delais);
+
+
        });
 
       </script>';

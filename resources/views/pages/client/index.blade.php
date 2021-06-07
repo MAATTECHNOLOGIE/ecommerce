@@ -69,8 +69,8 @@
       
       <!-- Heading-->
       <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
-        <h3 class="h3 mb-0 mr-2">
-        Achetez vos robes, sacs et objets en pagne
+        <h3 class="h3 mb-0 mr-2"> 
+        Achetez vos robes, sacs et objets en pagne <div class="fb-login-button" data-width="" data-size="medium" data-button-type="login_with" data-layout="rounded" data-auto-logout-link="false" data-use-continue-as="false"></div>
         </h3>
       </div>
 

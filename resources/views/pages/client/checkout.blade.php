@@ -252,8 +252,8 @@
           </div>
           <div class="row">
                 <!-- Page Content-->
-    <div class="container pb-5 mb-sm-4">
-      <div class="pt-5">
+    <div class="container mb-sm-4">
+      <div class="pt-4">
         <div class="card py-3 mt-sm-3">
           <div class="card-body text-center" id="payCmnd">
             <h2 class="h4 pb-3">
@@ -284,7 +284,51 @@
         </div>
       </div>
     </div>
+
+
           </div>
+      <div class="pt-4 bg-darker">
+        <div class="container">
+          <div class="row pb-3">
+            <div class="col-md-3 col-sm-6 mb-2">
+              <div class="media"><i class="czi-rocket text-primary" style="font-size: 2.25rem;"></i>
+                <div class="media-body pl-3">
+                  <h6 class="font-size-base text-light mb-1">Livraison rapide</h6>
+                  <p class="mb-0 font-size-ms text-light opacity-50">Délais de livraison respectés</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6 mb-2">
+              <div class="media"><i class="czi-card text-primary" style="font-size: 2.25rem;"></i>
+                <div class="media-body pl-3">
+                  <h6 class="font-size-base text-light mb-1">Paiement sécurisé</h6>
+                  <p class="mb-0 font-size-ms text-light opacity-50">Certificat SSL / Fiabilité Attesté</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-2">
+              <div class="media"><i class="czi-support text-primary" style="font-size: 2.25rem;"></i>
+                <div class="media-body pl-3">
+                  <h6 class="font-size-base text-light mb-1">Service client {{ getSite() }}</h6>
+                  <p class="mb-0 font-size-ms text-light ">24 H/24 au <span class="text-primary">{{ '+'.getTel() }}</span> </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-2">
+              <div class="media"><i class="czi-currency-exchange text-primary" style="font-size: 2.25rem;"></i>
+                <div class="media-body pl-3">
+                  <h6 class="font-size-base text-light mb-1">Remboursement fond</h6>
+                  <p class="mb-0 font-size-ms text-light ">Consulter l'article 13 du 
+                    <a href="#cgu" class="cgu">CGU</a></p>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
         <?php }?>
         </section>
 

@@ -45,7 +45,10 @@
               <img src="{{$values["image"]}}" alt="Product"></a>
               <div class="media-body pt-2">
                 <h3 class="product-title font-size-base mb-2"><a href="#">
-                  {{$values["produit"]}}
+               
+                 @php
+                  $prdStock = getStockPrd($values["idStock"]);
+                 @endphp
                 </a></h3>
                 <div class="font-size-sm">
                   <span class="text-muted mr-2">Prix unitaire:</span>
@@ -55,6 +58,28 @@
                 </div>
                 <div class="font-size-sm"><span class="text-muted mr-2">Qte:</span>
                 {{$values["qte"]}}</div>
+                <hr>
+
+                @if($prdStock->couleur != 1)
+                <div class="font-size-sm"><span class="text-muted mr-2">Couleur:</span>
+                {{ getAttriById($prdStock->couleur)->libelle }}</div>
+                <hr>
+                @endif
+                @if($prdStock->taille != 1)
+                <div class="font-size-sm"><span class="text-muted mr-2">Taille:</span>
+                {{ getAttriById($prdStock->taille)->libelle }}</div>
+                <hr>
+                @endif
+                @if($prdStock->epaisseur != 1)
+                <div class="font-size-sm"><span class="text-muted mr-2">Epaisseur:</span>
+                {{ getAttriById($prdStock->epaisseur)->libelle }}</div>
+                <hr>
+                @endif
+                @if($prdStock->epaisseur != 1)
+                <div class="font-size-sm">
+                  <span class="text-muted mr-2">Pointure:</span>
+                {{ getAttriById($prdStock->pointure)->libelle }}</div>
+                @endif
                 <div class="font-size-lg text-accent pt-2"></div>
               </div>
             </div>
@@ -82,6 +107,13 @@
               $total = $total+($values['qte']*$values['prix']);
              @endphp
             @endforeach
+             <div class="text-center">
+              <p class="fs-ms">
+                <small>
+                  <em>Les retours d'articles ne sont pas autorisés sur notre plateforme 10 jour après livraison.</em>
+                </small>     
+              </p> 
+            </div>
           @else
            <!-- Primary alert -->
            <div class="alert alert-primary" 
@@ -136,11 +168,10 @@
                       <div class="form-group ville">
                         
                       </div>
-                      <a class="">
-                        <div class="alert alert-warning" 
-                         role="alert">Coût: <span class="cout">00</span>  {{getTDevise()}}
+                        <div class="alert alert-warning infoPlus" 
+                         role="alert">  Livraison : <span class="cout">00</span>  {{getTDevise()}}
+                         <p class="alert-danger">Délais de livraison : <span id="delais"> 24 </span> H</p>
                         </div>
-                      </a>
                     </form>
                   </div>
                 </div>

@@ -4,6 +4,7 @@ use App\Model\produits;
 use App\Model\attributs;
 use App\Model\imgPrdByColor;
 use App\Model\produits_has_attributs;
+use App\Model\stock_prd;
 
 
 if(!function_exists('getAttriByType'))
@@ -92,5 +93,15 @@ if(!function_exists('getStockByIdPrd'))
 			->where('stock_prds.produits_id','=', $idprd)
             ->get();
          return $stockByIdPrd;
+	}
+}
+
+// Obtenir Stock d'un Prd by idPrd
+if(!function_exists('getStockPrd'))
+{
+	function getStockPrd($idStck)
+	{
+		$stockPrd = stock_prd::find($idStck);
+         return $stockPrd;
 	}
 }

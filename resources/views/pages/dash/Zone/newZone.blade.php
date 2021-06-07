@@ -49,9 +49,13 @@
            <input class="form-control" id="cout" type="text" placeholder="coût">
         </div>
 
+
+        <div class="form-group">
+          <label for="name">Délais de livraison (en Heure)</label>
+           <input class="form-control" id="delais" type="number"  placeholder="délais exprimer en Heure" min="1" >
+        </div>
         <button class="ml-1 btn btn-outline-primary rounded-capsule mr-1 mb-1 addZone" 
         type="button">Valider</button>
-
 
        </form>
       </div>
@@ -72,6 +76,7 @@
          var pays  = $("#pays").val();
          var ville = $("#ville").val();
          var cout  = $("#cout").val();
+         var delais  = $("#delais").val();
 
         // Contrôlle des données
          if (pays=='') {
@@ -97,7 +102,7 @@
             
              url:'AddZone',
              method:'GET',
-             data:{ville:ville,pays:pays,cout:cout},
+             data:{ville:ville,pays:pays,cout:cout,delais:delais},
              dataType:'text',
              success:function(){
               $('#main_content').load("/listeZone");

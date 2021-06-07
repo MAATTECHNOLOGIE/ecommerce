@@ -207,6 +207,7 @@ Swal.fire({
   icon: 'error',
   title: 'Ooups...',
   text: 'Veuillez choisir la couleur!',
+  confirmButtonColor: '#e8a820',
 })
 } 
 });

@@ -33,7 +33,7 @@
       <div class="row mb-4">
         <div class="col-sm-4 mb-2">
           <a href="#countMainA">
-           <div class="bg-secondary p-4 text-center rounded-lg newwComd"><span class="font-weight-medium text-dark mr-2">Mes nouvelles commande</span>
+           <div class="bg-secondary p-4 text-center rounded-lg newwComd"><span class="font-weight-medium text-dark mr-2">Mes nouvelles commandes</span>
            </div>
           </a>
         </div>
@@ -74,7 +74,6 @@
                      </td>
                      <td class="py-3">{{$cmd->dateComd}}
                      </td>
-                     
                      <td class="py-3">{{$cmd->montant}}
                        {{getTDevise()}}
                      </td>
